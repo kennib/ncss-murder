@@ -1,0 +1,117 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>NCSS Murder</title>
+		<link href='http://fonts.googleapis.com/css?family=Josefin+Sans:400,700' rel='stylesheet' type='text/css'>
+		<style>
+			body {
+				max-width: 1000px;
+				margin: 0px auto;
+
+				background-color: #eee;
+
+				font-family: 'Josefin Sans';
+			}
+
+			header {
+				position: fixed;
+				top: 0px;
+				padding: 10px;
+
+				background-color: white;
+				box-shadow: 0px 4px 4px rgba(0,0,0, 0.2);
+			}
+
+			nav {
+			}
+
+			nav > a {
+				display: inline-block;
+				width: 135.8px;
+				margin-right: 5px;
+				padding: 10px;
+
+				color: white;
+				background-color: #ad213a;
+
+				text-align: center;
+			}
+
+			nav > a:hover {
+				background-color: #ba485c;
+			}
+
+			nav > a:last-child {
+				margin-right: 0px;
+			}
+
+			article {
+				margin-top: 10px;
+				margin-bottom: 10px;
+
+				padding: 10px;
+
+				background-color: white;
+				box-shadow: 0px 2px 0px rgba(0,0,0, 0.2);
+			}
+
+			a {
+				color: #ad213a;
+				font-weight: bold;
+				text-decoration: none;
+			}
+
+			a:hover {
+				text-decoration: underline;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>NCSS Murder</h1>
+			<nav>
+				<a href="/map">Map</a>
+				<a href="/list">List</a>
+				<a href="/stats">Stats</a>
+				<a href="/profiles">Profiles</a>
+				<a href="/achievements">Achievements</a>
+				<a href="/admin">Admin</a>
+			</nav>
+		</header>
+		<article>
+			<h2>Quick Stats</h2>
+			<p>23 people are still alive</p>
+			<p>14 people were murdered yesterday</p>
+		</article>
+		<article>
+			<h2>Most Wanted</h2>
+			<p>Vivian Li with 18 kills</p>
+		</article>
+		<article>
+			<h2>Murder map</h2>
+			<div id="map"></div>
+
+			<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+			<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+			<style>
+				#map { height: 240px; }
+			</style>
+			<script>
+				var map = L.map('map').setView([-33.889413, 151.190137], 16);
+				L.tileLayer('http://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+				    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+					id: 'kennib.k70hhmpn',
+					maxZoom: 18,
+					minZoom: 13,
+				}).addTo(map);
+			</script>
+		</article>
+
+		<script>
+			var header = document.querySelector('header');
+			var firstArticle = document.querySelector('body > article');
+			firstArticle.style.marginTop = '140px';
+		</script>
+	</body>
+</html>
