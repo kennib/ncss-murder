@@ -8,6 +8,21 @@ class Game(Model):
 		self.id, self.year, self.number = id, year, number
 
 	@classmethod
+	def latest(cls, year=None) -> (int, int):
+		latest = """SELECT year, number FROM game"""
+
+		if year:
+			attribs, values = cls._attribs('AND', {'year': year})
+			latest += """ WHERE {}""".format(attribs)
+		else:
+			values = []
+
+		latest += """ ORDER BY year, number DESC LIMIT 1""" 
+		
+		return cls._sql(latest, values).fetchone()
+		
+
+	@classmethod
 	def init_db(cls):
 		CREATE = """CREATE TABLE game (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,6 +36,13 @@ class Game(Model):
 def game(response):
 	year = response.get_field('year')
 	number = response.get_field('number')
+
+	if not year or not number:
+		latest_year, latest_number = Game.latest(year)
+		if not year:
+			year = latest_year
+		if not number:
+			number = latest_number+1
 	
 	Game.add(year=year, number=number)
 	response.redirect('/{}-{}'.format(year, number))
