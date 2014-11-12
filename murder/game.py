@@ -16,3 +16,11 @@ class Game(Model):
 			UNIQUE (year, number)
 		)"""
 		cls._sql(CREATE)
+
+
+def game(response):
+	year = response.get_field('year')
+	number = response.get_field('number')
+	
+	Game.add(year=year, number=number)
+	response.redirect('/{}-{}'.format(year, number))
