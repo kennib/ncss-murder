@@ -61,3 +61,27 @@ a {
 a:hover {
 	text-decoration: underline;
 }
+
+/* Buttons */
+button {
+	padding: 10px;
+
+	cursor: pointer;
+
+	color: white;
+	background-color: #ad213a;
+	border: none;
+
+	text-align: center;
+	font-family: 'Josefin Sans';
+}
+
+button:hover {
+	background-color: #ba485c;
+}
+
+button:active {
+	background-color: #ad213a;
+	box-shadow: inset 2px 2px 0px rgba(0,0,0, 0.4);
+	outline: none;
+}
