@@ -21,5 +21,10 @@
 			</nav>
 		</header>
 		<% content %>
+		<script>
+			var header = document.querySelector('header');
+			var firstContent = document.querySelector('header + *');
+			firstContent.style.marginTop = '140px';
+		</script>
 	</body>
 </html>
