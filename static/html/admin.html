@@ -1,0 +1,25 @@
+<article>
+	<h2>Admin actions</h2>
+	<button>
+		Lodge a murder
+	</button>
+	<p>or</p>
+	<form action="/player" method="POST" enctype="multipart/form-data">
+		<input type="hidden" name="game" value="<% game.id %>"></input>
+		<input type="file" name="players" placeholder="Upload players CSV"></input>
+		<p>
+			<input type="submit" value="Add players"></input>
+		</p>
+	</form>
+	<p>or</p>
+	<button onClick="newGame()">
+		Create a new game
+	</button>
+</article>
+
+<script>
+	function newGame() {
+		var year = new Date().getFullYear();
+		location.assign('/game?year='+year);
+	}
+</script>
