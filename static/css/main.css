@@ -17,6 +17,17 @@ header {
 	box-shadow: 0px 4px 4px rgba(0,0,0, 0.2);
 }
 
+header h1 {
+	text-align: center;
+}
+
+header h1:before,
+header h1:after {
+	content: '――――――――';
+	margin: 0px 4px;
+	color: #ad213a;
+}
+
 nav {
 }
 
@@ -49,6 +60,14 @@ article {
 
 	background-color: white;
 	box-shadow: 0px 2px 0px rgba(0,0,0, 0.2);
+
+	text-align: center;
+}
+
+article > h2:before,
+article > h2:after {
+	content: '――――――――';
+	margin: 0px 4px;
 }
 
 /* Links */
