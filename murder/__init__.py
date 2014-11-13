@@ -18,12 +18,16 @@ def init_db():
 
 def init_server():
 	server = Server()
-	# HTML pages
-	server.register('/', home)
-	server.register('/(\d{4})(-\d+)?', home)
-	server.register('/admin', admin)
-	server.register('/profiles', profiles)
+
 	# API pages
 	server.register('/game', game)
 	server.register('/player', player, post=player)
+
+	# HTML pages
+	game_id = '/([0-9a-zA-Z-]+)'
+	server.register('/admin/?', admin)
+	server.register('{}/admin/?'.format(game_id), admin)
+	server.register('{}/profiles/?'.format(game_id), profiles)
+	server.register('{}?/?'.format(game_id), home)
+
 	server.run()

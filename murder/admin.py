@@ -5,4 +5,6 @@ def admin_template(game_id) -> str:
 	return inside_page(template, game_id=game_id)
 
 def admin(response, game_id=None):
-	response.write(admin_template(game_id))
+	template = admin_template(game_id)
+	template = template.replace('<% game.id %>', game_id if game_id else '')
+	response.write(template)

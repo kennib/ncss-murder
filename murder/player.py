@@ -47,4 +47,4 @@ def player(response):
 
 	Player.bulk_add(players)
 
-	response.redirect('/profiles')
+	response.redirect('/{}/profiles'.format(game_id))
