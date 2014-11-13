@@ -4,7 +4,7 @@
 	<head>
 		<title>NCSS Murder</title>
 		<link href='http://fonts.googleapis.com/css?family=Josefin+Sans:400,700' rel="stylesheet" type="text/css">
-		<link href="static/css/main.css" rel="stylesheet" type="text/css">
+		<link href="/static/css/main.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
 		<header>
@@ -21,5 +21,10 @@
 			</nav>
 		</header>
 		<% content %>
+		<script>
+			var header = document.querySelector('header');
+			var firstContent = document.querySelector('header + *');
+			firstContent.style.marginTop = '140px';
+		</script>
 	</body>
 </html>
