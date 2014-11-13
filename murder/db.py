@@ -52,6 +52,24 @@ class Model(object):
 		c = cls._sql(GET)
 		return cls(*c.fetchone())
 
+	@classmethod
+	def bulk_add(cls, items:[dict]):
+		insert = """INSERT INTO {}""".format(cls._table)
+		
+		if items:
+			attribs = ', '.join(items[0].keys())
+			insert += """({}) VALUES """.format(attribs)
+
+			for i, item in enumerate(items):
+				places = ', '.join('?' * len(item))
+				insert += '({})'.format(places)
+				if i < len(items)-1:
+					insert += ','
+
+			values = [value  for item in items for value in item.values()]
+		
+			c = cls._sql(insert, values)
+
 	def update(self, **kwargs):
 		assert self.id is not None
 		assert len(kwargs) != 0
