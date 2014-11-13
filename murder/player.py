@@ -19,30 +19,31 @@ class Player(Model):
 		)"""
 		cls._sql(CREATE)
 
-def profiles_template() -> str:
+def profiles_template(game_id) -> str:
 	template = open('static/html/profiles.html', 'rU').read()
-	return inside_page(template)
+	return inside_page(template, game_id=game_id)
 
-def profiles(response):
-	players = '\n'.join('<tr><td>{}</td><td>{}</td></tr>'.format(player.name, player.type) for player in Player.iter(game=0))
-	print(Player.iter(game=0))
-	template = profiles_template()	
+def profiles(response, game_id=None):
+	players = '\n'.join('<tr><td>{}</td><td>{}</td></tr>'.format(player.name, player.type) for player in Player.iter(game=game_id))
+	template = profiles_template(game_id)
 	template = template.replace("""<% for player in profiles %>
 			<tr><% player %></tr>
 		<% endfor %>""", players)
 	response.write(template)
 
 def player(response):
-	game = response.get_field('game')
+	game_id = response.get_field('game')
 	name, type, contents = response.get_file('players')
 
 	if type == 'text/csv':
 		attributes_line, *player_lines = contents.decode("utf-8").splitlines()
 		attributes = attributes_line.split(',')
 		players = [dict([(attr, line.split(',')[i]) for i, attr in enumerate(attributes)]) for line in player_lines]
+	else:
+		players = []
 
 	for player in players:
-		player['game'] = game
+		player['game'] = game_id
 
 	Player.bulk_add(players)
 

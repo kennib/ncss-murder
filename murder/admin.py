@@ -1,10 +1,8 @@
 from .page import inside_page
 
-def admin_template() -> str:
+def admin_template(game_id) -> str:
 	template = open('static/html/admin.html', 'rU').read()
-	return inside_page(template)
+	return inside_page(template, game_id=game_id)
 
-def admin(response):
-	template = admin_template()
-	template = template.replace('<% game.id %>', '0')
-	response.write(template)
+def admin(response, game_id=None):
+	response.write(admin_template(game_id))
