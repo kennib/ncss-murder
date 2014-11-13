@@ -82,6 +82,7 @@ a:hover {
 }
 
 /* Buttons */
+input[type=submit],
 button {
 	padding: 10px;
 
@@ -95,10 +96,12 @@ button {
 	font-family: 'Josefin Sans';
 }
 
+input[type=submit]:hover,
 button:hover {
 	background-color: #ba485c;
 }
 
+input[type=submit]:active,
 button:active {
 	background-color: #ad213a;
 	box-shadow: inset 2px 2px 0px rgba(0,0,0, 0.4);

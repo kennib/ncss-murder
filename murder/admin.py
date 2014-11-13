@@ -5,4 +5,6 @@ def admin_template() -> str:
 	return inside_page(template)
 
 def admin(response):
-	response.write(admin_template())
+	template = admin_template()
+	template = template.replace('<% game.id %>', '0')
+	response.write(template)
