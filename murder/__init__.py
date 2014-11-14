@@ -19,4 +19,4 @@ def init_server():
 	server.register('/(\d{4})(-\d+)?', home)
 	server.register('/admin', admin)
 	server.register('/game', game)
-	server.run()
+	return server
