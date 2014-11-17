@@ -141,12 +141,16 @@ class Server:
         app = tornado.web.Application(self.handlers, static_path=self.static_path, cookie_secret=cookie_secret, debug=True)
         return app
 
-    def run(self):
+    def loop(self):
         # Initialise the app, binding to the appropriate address.
         app = self.app()
         app.listen(port=self.port, address=self.hostname)
         ncssbook_log.info('Reloading... waiting for requests on http://{}:{}'.format(self.hostname or 'localhost', self.port))
         
-        # Start the ioloop.
+        # Create the ioloop.
         loop = tornado.ioloop.IOLoop.instance()
+        return loop
+    
+    def run(self):
+        loop = self.loop()
         loop.start()

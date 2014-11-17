@@ -13,7 +13,7 @@ class {}(AsyncHTTPTestCase):
 """.format(name, module, server)
 
 	requests = record_requests(module, server)
-	urls = [url for url, method in requests]
+	urls = [request.uri for request in requests]
 	tests = """
 		urls = {!r}""".format(urls) + \
 """		
@@ -31,34 +31,45 @@ class {}(AsyncHTTPTestCase):
 def record_requests(module, server):
 	from subprocess import Popen, PIPE
 
-	# Construct server command
-	command = "from {} import {} as server; server().run()".format(module, server)
+	# Import the server
+	server = __import__(module).__dict__[server]()
+
+	# Recorder server requests
+	requests = record_server(server)
+
+	return requests
+
+# Takes a server and records its HTTP requests
+def record_server(server):
+	loop = None
+	requests = []
+
+	# Wrap each request with a logger
+	def logger(handler):
+		def log(response, *args, **kwargs):
+			requests.append(response.request)
+			handler(response, *args, **kwargs)
+		
+		return log
+
+	for handler in server.handlers:
+		h = handler.handler_class
+		h.get = logger(h.get)
+		h.post = logger(h.post)
+
+	# Create URL for ending the demo
+	def end_demo(response):
+		if loop:
+			loop.stop()
+
+	server.register('/end_demo', end_demo)
+
 	# Start server
-	server_process = Popen(['python', '-c', command], stdout=PIPE, stderr=PIPE)
-
-	# Wait for kill command
-	print('Enter "(q)uit" to stop recording\n', file=sys.stderr)
-	line = input()
-	while line != 'q' and line != 'quit':
-		line = input()
-
-	server_process.kill()
-
-	# Process logs
-	out, err = server_process.communicate()
-	logs = (out+err).decode('utf-8')
-	requests = process_logs(logs)
+	loop = server.loop()
+	loop.start()
 
 	return requests
 
-# Takes logs and returns a list of requests
-def process_logs(logs):
-	import re
-	requests = re.findall('(?<=web:1635] ).*', logs)
-	requests = [request.split() for request in requests]
-	requests = [(url, method) for status, method, url, ip, time in requests]
-	
-	return requests
 
 if __name__ == '__main__':
 	this, module, server = sys.argv
