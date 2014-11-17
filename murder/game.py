@@ -1,4 +1,5 @@
 from .db import Model
+from datetime import date
 
 class Game(Model):
 	_table = 'game'
@@ -9,7 +10,7 @@ class Game(Model):
 
 	@classmethod
 	def latest(cls, year=None) -> (int, int):
-		latest = """SELECT year, number FROM game"""
+		latest = """SELECT id, year, number FROM game"""
 
 		if year:
 			attribs, values = cls._attribs('AND', {'year': year})
@@ -19,7 +20,8 @@ class Game(Model):
 
 		latest += """ ORDER BY year, number DESC LIMIT 1""" 
 		
-		return cls._sql(latest, values).fetchone()
+		result = cls._sql(latest, values).fetchone()
+		return result if result != None else None
 		
 
 	@classmethod
@@ -34,15 +36,16 @@ class Game(Model):
 
 
 def game(response):
-	year = response.get_field('year')
-	number = response.get_field('number')
+	latest = Game.latest() 
+	if latest != None:
+		latest_id, latest_year, latest_number = latest
+	else:
+		latest_id, latest_year, latest_number = (-1, -1, -1)
 
-	if not year or not number:
-		latest_year, latest_number = Game.latest(year)
-		if not year:
-			year = latest_year
-		if not number:
-			number = latest_number+1
-	
-	Game.add(year=year, number=number)
-	response.redirect('/{}-{}'.format(year, number))
+	game_id = latest_id + 1
+	year = date.today().year
+	number = latest_number + 1
+
+	Game.add(id=game_id, year=year, number=number)
+
+	response.redirect('/{}'.format(game_id))
