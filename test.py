@@ -1,15 +1,11 @@
-import subprocess, sys, time, urllib.request
+from subprocess import call
+from os import listdir
+from os.path import isfile, join
 
-# Start server as subprocess
-server = subprocess.Popen(["python3", "-c", "from obiwan import *; install_obiwan_runtime_check(); import main"])
+# Get files in test directory
+TEST_PATH = 'tests'
+test_files = [join(TEST_PATH, f) for f in listdir(TEST_PATH) if isfile(join(TEST_PATH, f))]
 
-# Wait for server to start and then access homepage
-time.sleep(2)
-try:
-	urllib.request.urlopen('http://localhost:8888/')
-except Exception as e:
-	pass
-
-# Wait for requests to resolve and kill the server
-time.sleep(2)
-server.kill()
+# Run each of the tests
+for test_file in test_files:
+	call(['python3', '-m', 'tornado.testing', test_file])
