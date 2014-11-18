@@ -27,6 +27,7 @@ class {}(AsyncHTTPTestCase):
 	for request in requests:
 		args = {'method': request.method}
 		if request.method in ['PUT', 'POST', 'DELETE', 'PATCH']:
+			args['headers'] = request.headers
 			args['body'] = request.body
 
 		tests += """url = {!r}
