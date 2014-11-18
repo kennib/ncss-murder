@@ -1,18 +1,27 @@
 import sys
 
 # Generates test cases based on recorded requests
-def generate_test_case(module, server, name="HTTPTestCase"):
+def generate_test_case(module, server, database, name="HTTPTestCase"):
 	defs = """from tornado.testing import AsyncHTTPTestCase
 
 class {}(AsyncHTTPTestCase):
 	def get_app(self):
+		from os import remove
+		from os.path import exists
+
+		from {} import {} as database
 		from {} import {} as server
+
+		test_database = 'test.db'
+		if exists(test_database): remove(test_database)
+		database(test_database)
+
 		return server().app()
 	
 	def test(self):
-		""".format(name, module, server)
+		""".format(name, module, database, module, server)
 
-	requests = record_requests(module, server)
+	requests = record_requests(module, server, database)
 	
 	tests = ''
 	for request in requests:
@@ -33,14 +42,24 @@ class {}(AsyncHTTPTestCase):
 
 
 # Records the HTTP requests to the server
-def record_requests(module, server):
+def record_requests(module, server, database):
+	from os import remove
+	from os.path import exists
 	from subprocess import Popen, PIPE
+
+	# Initialise the database
+	test_database = 'test.db'
+	if exists(test_database): remove(test_database)
+	database = __import__(module).__dict__[database](test_database)
 
 	# Import the server
 	server = __import__(module).__dict__[server]()
 
-	# Recorder server requests
+	# Record server requests
 	requests = record_server(server)
+
+	# Remove the test database
+	if exists(test_database): remove(test_database)
 
 	return requests
 
@@ -80,7 +99,7 @@ def record_server(server):
 
 
 if __name__ == '__main__':
-	this, module, server = sys.argv
+	this, module, server, database = sys.argv
 	
-	test_case = generate_test_case(module, server)
+	test_case = generate_test_case(module, server, database)
 	print(test_case)

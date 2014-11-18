@@ -7,9 +7,14 @@ from .game import game, Game
 from .player import player, profiles, Player
 from .admin import admin
 
-def init_db():
+def init_db(database=None):
 	tables = [Game, Player]
 	for table in tables:
+		# Set the database connection
+		if database:
+			table._conn = sqlite3.connect(database, isolation_level=None)
+
+		# Initialise the database tables
 		try:
 			table.init_db()
 		except sqlite3.OperationalError as e:

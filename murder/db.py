@@ -3,7 +3,7 @@ import sqlite3
 from tornado.ncss import ncssbook_log
 
 class Model(object):
-	_conn = sqlite3.connect('ncssbook.db', isolation_level=None)
+	_conn = sqlite3.connect('ncssmurder.db', isolation_level=None)
 	_table = None
 
 	@classmethod
