@@ -10,19 +10,24 @@ class {}(AsyncHTTPTestCase):
 		return server().app()
 	
 	def test(self):
-""".format(name, module, server)
+		""".format(name, module, server)
 
 	requests = record_requests(module, server)
-	urls = [request.uri for request in requests]
-	tests = """
-		urls = {!r}""".format(urls) + \
-"""		
-		responses = [self.fetch(url) for url in urls]
-		errors = [response for response in responses if response.error]
+	
+	tests = ''
+	for request in requests:
+		args = {'method': request.method}
+		if request.method in ['PUT', 'POST', 'DELETE', 'PATCH']:
+			args['body'] = request.body
 
-		for response in errors:
-			raise Exception('{}: {} {}'.format(response.error, response.request.method, response.request.url))
-"""
+		tests += """url = {!r}
+		kwargs = {!r}
+		response = self.fetch(url, **kwargs)
+		""".format(request.uri, args)
+		tests+= """if response.error:
+			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
+		
+		"""
 
 	return defs + tests
 
@@ -56,6 +61,9 @@ def record_server(server):
 		h = handler.handler_class
 		h.get = logger(h.get)
 		h.post = logger(h.post)
+		h.patch = logger(h.patch)
+		h.delete = logger(h.delete)
+		h.put = logger(h.put)
 
 	# Create URL for ending the demo
 	def end_demo(response):
