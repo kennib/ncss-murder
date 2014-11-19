@@ -5,4 +5,4 @@ from murder import init_db, init_server
 init_db()
 
 # Initialise the web server
-init_server()
+init_server().run()

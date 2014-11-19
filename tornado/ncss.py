@@ -131,17 +131,26 @@ class Server:
         url_spec = tornado.web.URLSpec(url_pattern, h, name=url_name)
         self.handlers.append(url_spec)
 
-    def run(self):
+    def app(self):
         # Randomise the cookie secret upon reload.
         m = hashlib.md5()
         m.update((str(random.random()) + str(random.random())).encode('utf-8'))
         cookie_secret = m.digest()
 
-        # Create the app in debug mode (autoreload), binding to the appropriate address.
+        # Create the app in debug mode (autoreload)
         app = tornado.web.Application(self.handlers, static_path=self.static_path, cookie_secret=cookie_secret, debug=True)
+        return app
+
+    def loop(self):
+        # Initialise the app, binding to the appropriate address.
+        app = self.app()
         app.listen(port=self.port, address=self.hostname)
         ncssbook_log.info('Reloading... waiting for requests on http://{}:{}'.format(self.hostname or 'localhost', self.port))
-
-        # Start the ioloop.
+        
+        # Create the ioloop.
         loop = tornado.ioloop.IOLoop.instance()
+        return loop
+    
+    def run(self):
+        loop = self.loop()
         loop.start()
