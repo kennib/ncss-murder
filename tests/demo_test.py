@@ -101,7 +101,7 @@ class HTTPTestCase(AsyncHTTPTestCase):
 		if response.error:
 			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
 		
-		url = '/0/profiles'
+		url = '/0/murders'
 		kwargs = {'method': 'GET'}
 		response = self.fetch(url, **kwargs)
 		if response.error:
