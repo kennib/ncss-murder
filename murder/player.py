@@ -1,5 +1,5 @@
 from .db import Model
-from .page import inside_page
+from .template import templater, inside_page
 
 class Player(Model):
 	_table = 'player'
@@ -19,16 +19,14 @@ class Player(Model):
 		)"""
 		cls._sql(CREATE)
 
-def profiles_template(game_id) -> str:
-	template = open('static/html/profiles.html', 'rU').read()
-	return inside_page(template, game_id=game_id)
+def profiles_template(game_id, players) -> str:
+	profiles = templater.load('profiles.html').generate(game_id=game_id, profiles=players)
+	return inside_page(profiles, game_id=game_id)
 
 def profiles(response, game_id=None):
-	players = '\n'.join('<tr><td>{}</td><td>{}</td></tr>'.format(player.name, player.type) for player in Player.iter(game=game_id))
-	template = profiles_template(game_id)
-	template = template.replace("""<% for player in profiles %>
-			<tr><% player %></tr>
-		<% endfor %>""", players)
+	player_query = Player.select(game=game_id)
+	players = [{'id': id, 'name': name, 'type': type} for id, game, name, type in player_query]
+	template = profiles_template(game_id, players)
 	response.write(template)
 
 def player(response):

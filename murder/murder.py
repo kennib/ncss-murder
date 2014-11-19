@@ -1,8 +1,6 @@
-from tornado.template import Template
-
 from .db import Model
 from .player import Player
-from .page import inside_page
+from .template import templater, inside_page
 
 class Murder(Model):
 	_table='murder'
@@ -27,13 +25,11 @@ class Murder(Model):
 def lodge_template(game_id) -> str:
 	player_query = Player.select(game=game_id)
 	players = [{'id': id, 'name': name, 'type': type} for id, game, name, type in player_query]
-	template = open('static/html/lodge_murder.html', 'rU').read()
-	t = Template(template)
-	return inside_page(t.generate(players=players).decode('utf-8'), game_id=game_id)
+	lodge = templater.load('lodge_murder.html').generate(game_id=game_id, players=players)
+	return inside_page(lodge, game_id=game_id)
 
 def lodge(response, game_id=None):
-	template = lodge_template(game_id)
-	response.write(template)
+	response.write(lodge_template(game_id))
 
 def murder(response):
 	game_id = response.get_field('game')
