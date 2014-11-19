@@ -54,19 +54,17 @@ class Model(object):
 
 	@classmethod
 	def bulk_add(cls, items:[dict]):
-		insert = """INSERT INTO {}""".format(cls._table)
+		insert = """INSERT INTO {}\n""".format(cls._table)
 		
 		if items:
-			attribs = ', '.join(items[0].keys())
-			insert += """({}) VALUES """.format(attribs)
-
 			for i, item in enumerate(items):
-				places = ', '.join('?' * len(item))
-				insert += '({})'.format(places)
-				if i < len(items)-1:
-					insert += ','
+				if i  == 0:
+					insert += 'SELECT '+ ', '.join('? AS {}'.format(attrib) for attrib in item.keys()) + '\n'
+				else:
+					places = ', '.join('?' * len(item))
+					insert += 'UNION SELECT {}\n'.format(places)
 
-			values = [value  for item in items for value in item.values()]
+			values = [value for item in items for value in item.values()]
 		
 			c = cls._sql(insert, values)
 
