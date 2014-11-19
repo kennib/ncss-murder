@@ -141,8 +141,24 @@ article {
 
 article > h2:before,
 article > h2:after {
+	display: block;
 	content: '――――――――';
 	margin: 0px 4px;
+}
+
+
+@media screen and (min-width:750px) and (max-width: 999px) {
+	article > h2:before,
+	article > h2:after {
+		display: inline;
+	}
+}
+
+@media screen and (min-width: 1000px) {
+	article > h2:before,
+	article > h2:after {
+		display: inline;
+	}
 }
 
 /* Links */
