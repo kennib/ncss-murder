@@ -5,10 +5,11 @@ import sqlite3
 from .home import home
 from .game import game, Game
 from .player import player, profiles, Player
+from .murder import Murder
 from .admin import admin
 
 def init_db(database=None):
-	tables = [Game, Player]
+	tables = [Game, Player, Murder]
 	for table in tables:
 		# Set the database connection
 		if database:
