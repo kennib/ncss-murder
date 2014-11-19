@@ -1,10 +1,8 @@
-from .page import inside_page
+from .template import templater, inside_page
 
 def admin_template(game_id) -> str:
-	template = open('static/html/admin.html', 'rU').read()
-	return inside_page(template, game_id=game_id)
+	admin = templater.load('admin.html').generate(game_id=game_id)
+	return inside_page(admin, game_id=game_id)
 
 def admin(response, game_id=None):
-	template = admin_template(game_id)
-	template = template.replace('<% game.id %>', game_id if game_id else '')
-	response.write(template)
+	response.write(admin_template(game_id))

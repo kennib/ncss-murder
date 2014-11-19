@@ -1,9 +1,9 @@
-from .page import inside_page
 from .game import Game
+from .template import templater, inside_page
 
 def home_template(game_id) -> str:
-	template = open('static/html/home.html', 'rU').read()
-	return inside_page(template, game_id=game_id)
+	home = templater.load('home.html').generate(game_id=game_id)
+	return inside_page(home, game_id=game_id)
 
 def home(response, game_id=None):
 	if game_id is None:

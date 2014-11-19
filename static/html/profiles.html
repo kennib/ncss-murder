@@ -7,9 +7,12 @@
 			</tr>
 		</thead>
 		<tbody>
-		<% for player in profiles %>
-			<tr><% player %></tr>
-		<% endfor %>
+		{% for player in profiles %}
+			<tr>
+				<td>{{ player['name'] }}</td>
+				<td>{{ player['type'] }}</td>
+			</tr>
+		{% end %}
 		</tbody>
 	</table>
 </article>
