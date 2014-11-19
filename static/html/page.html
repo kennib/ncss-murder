@@ -2,29 +2,54 @@
 
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>NCSS Murder</title>
 		<link href='http://fonts.googleapis.com/css?family=Josefin+Sans:400,700' rel="stylesheet" type="text/css">
 		<link href="/static/css/main.css" rel="stylesheet" type="text/css">
+		<script src="/static/js/lib/detect-element-resize.js" type="text/javascript"></script>
+		<script>
+			function setHeaderMargin() {
+				var header = document.querySelector('header');
+				var firstContent = document.querySelector('header + *');
+				firstContent.style.marginTop = header.offsetHeight + 'px';
+			}
+			
+			function setHeaderMarginOnResize() {
+				var header = document.querySelector('header');
+				addResizeListener(header, setHeaderMargin);
+				setHeaderMargin();
+			}
+
+			function toggleNav() {
+				var nav = document.querySelector('header nav');
+				if (nav.classList.contains('open')) {
+					nav.classList.remove('open');
+					nav.classList.add('closed');
+				} else if (nav.classList.contains('closed') ) {
+					nav.classList.remove('closed');
+					nav.classList.add('open');
+				}
+			}
+		</script>
 	</head>
 	<body>
 		<header>
+			<button class="hamburger" onclick="toggleNav();">&#9776;</button>
+
 			<h1>
 				<a href="/">NCSS Murder</a>
 			</h1>
-			<nav>
+			<nav class="closed">
 				<a href="/{{ game_id }}/map">Map</a>
 				<a href="/{{ game_id }}/list">List</a>
 				<a href="/{{ game_id }}/stats">Stats</a>
 				<a href="/{{ game_id }}/profiles">Profiles</a>
 				<a href="/{{ game_id }}/achievements">Achievements</a>
 				<a href="/{{ game_id }}/admin">Admin</a>
+				<br>
 			</nav>
 		</header>
 		{% raw content %}
-		<script>
-			var header = document.querySelector('header');
-			var firstContent = document.querySelector('header + *');
-			firstContent.style.marginTop = '140px';
-		</script>
+		<script>setHeaderMarginOnResize();</script>
 	</body>
 </html>
