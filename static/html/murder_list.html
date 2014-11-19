@@ -1,0 +1,23 @@
+<article>
+	<h2>Murders</h2>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Murderer</th>
+				<th>Victim</th>
+				<th>Time of Death</th>
+				<th>Crime scene</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for murder in murders %}
+			<tr>
+				<td>{{ murder.murderer }}</td>
+				<td>{{ murder.victim }}</td>
+				<td>{{ murder.datetime }}</td>
+				<td>{{ murder.location }}</td>
+			</tr>
+			{% end %}
+		</tbody>
+</articl>
