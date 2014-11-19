@@ -29,12 +29,13 @@ header h1:after {
 }
 
 nav {
+	text-align: center;
 }
 
 nav > a {
-	display: inline-block;
-	width: 135.8px;
-	margin-right: 5px;
+	display: block;
+	margin: 5px;
+	margin-top: 0px;
 	padding: 10px;
 
 	color: white;
@@ -47,8 +48,42 @@ nav > a:hover {
 	background-color: #ba485c;
 }
 
-nav > a:last-child {
-	margin-right: 0px;
+@media screen and (min-width:750px) and (max-width: 999px) {
+	nav {
+		/* fix whitespace between nav > a elements */
+		letter-spacing: -0.31em; /* webkit */
+		*letter-spacing: normal; /* reset IE < 8 */
+		word-spacing: -0.43em; /* IE < 8 && gecko */
+	}
+
+	nav > a {
+		display: inline-block;
+		width: 220px;
+		
+		/* fix whitespace between nav > a elements */
+		zoom: 1; *display: inline; /* IE < 8: fake inline-block */
+		letter-spacing: normal;
+		word-spacing: normal;
+		vertical-align: top;
+	}
+}
+
+@media screen and (min-width: 1000px) {
+	header {
+		width: 1000px;
+		box-sizing: border-box;
+	}
+
+	nav > a {
+		display: inline-block;
+		width: 130px;
+		margin: 0px;
+		margin-right: 5px;
+	}
+
+	nav > a:last-child {
+		margin-right: 0px;
+	}
 }
 
 /* Articles */
