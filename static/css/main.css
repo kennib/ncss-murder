@@ -11,6 +11,8 @@ body {
 header {
 	position: fixed;
 	top: 0px;
+	width: 100%;
+	box-sizing: border-box;
 	padding: 10px;
 
 	background-color: white;
@@ -19,6 +21,7 @@ header {
 
 header h1 {
 	text-align: center;
+	white-space: pre;
 }
 
 header h1:before,
@@ -49,6 +52,10 @@ nav > a:hover {
 }
 
 @media screen and (min-width:750px) and (max-width: 999px) {
+	header h1 {
+		white-space: normal;
+	}
+
 	nav {
 		/* fix whitespace between nav > a elements */
 		letter-spacing: -0.31em; /* webkit */
@@ -71,7 +78,10 @@ nav > a:hover {
 @media screen and (min-width: 1000px) {
 	header {
 		width: 1000px;
-		box-sizing: border-box;
+	}
+	
+	header h1 {
+		white-space: normal;
 	}
 
 	nav > a {
