@@ -45,6 +45,7 @@ def player(response):
 	for player in players:
 		player['game'] = game_id
 
-	Player.bulk_add(players)
+	for player in players:
+		Player.add(**player)
 
 	response.redirect('/{}/profiles'.format(game_id))
