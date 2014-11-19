@@ -31,8 +31,22 @@ header h1:after {
 	color: #ad213a;
 }
 
+.hamburger {
+	position: fixed;
+
+	font-size: 25px;
+	line-height: 1;
+}
+
 nav {
 	text-align: center;
+}
+
+nav.open {
+	display: block;
+}
+nav.closed {
+	display: none;
 }
 
 nav > a {
@@ -56,11 +70,19 @@ nav > a:hover {
 		white-space: normal;
 	}
 
+	.hamburger {
+		display: none;
+	}
+
 	nav {
 		/* fix whitespace between nav > a elements */
 		letter-spacing: -0.31em; /* webkit */
 		*letter-spacing: normal; /* reset IE < 8 */
 		word-spacing: -0.43em; /* IE < 8 && gecko */
+	}
+
+	nav.closed {
+		display: block;
 	}
 
 	nav > a {
@@ -80,8 +102,16 @@ nav > a:hover {
 		width: 1000px;
 	}
 	
+	.hamburger {
+		display: none;
+	}
+
 	header h1 {
 		white-space: normal;
+	}
+
+	nav.closed {
+		display: block;
 	}
 
 	nav > a {

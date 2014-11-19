@@ -18,15 +18,28 @@
 				var header = document.querySelector('header');
 				addResizeListener(header, setHeaderMargin);
 				setHeaderMargin();
-			};
+			}
+
+			function toggleNav() {
+				var nav = document.querySelector('header nav');
+				if (nav.classList.contains('open')) {
+					nav.classList.remove('open');
+					nav.classList.add('closed');
+				} else if (nav.classList.contains('closed') ) {
+					nav.classList.remove('closed');
+					nav.classList.add('open');
+				}
+			}
 		</script>
 	</head>
 	<body>
 		<header>
+			<button class="hamburger" onclick="toggleNav();">&#9776;</button>
+
 			<h1>
 				<a href="/">NCSS Murder</a>
 			</h1>
-			<nav>
+			<nav class="closed">
 				<a href="/{{ game_id }}/map">Map</a>
 				<a href="/{{ game_id }}/list">List</a>
 				<a href="/{{ game_id }}/stats">Stats</a>
