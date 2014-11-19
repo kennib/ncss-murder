@@ -146,6 +146,9 @@ article > h2:after {
 	margin: 0px 4px;
 }
 
+article table {
+	width: 100%;
+}
 
 @media screen and (min-width:750px) and (max-width: 999px) {
 	article > h2:before,
