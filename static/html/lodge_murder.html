@@ -1,0 +1,53 @@
+<article>
+	<h2>Lodge a murder</h2>
+	
+	<form method="POST" action="/murder">
+		<input type="hidden" name="game" value="<% game.id %>"></input>
+
+		<fieldset>
+			<p>
+				<label for="murderer">Murderer</label>
+				<select name="murderer">
+				{% for player in players %}
+					<option value="{{ player['id'] }}">
+						{{ escape(player['name']) }} - {{ escape(player['type']) }}
+					</option>
+				{% end %}
+				</select>
+			</p>
+			<p>
+				<label for="victim">Victim</label>
+				<select name="victim">
+				{% for player in players %}
+					<option value="{{ player['id'] }}">
+						{{ escape(player['name']) }} - {{ escape(player['type']) }}
+					</option>
+				{% end %}
+				</select>
+			</p>
+			<p>
+				<input type="submit" value="Lodge Murder"></input>
+				or continue below...
+			</p>
+		</fieldset>
+		<fieldset>
+			<p>
+				<label for="datetime">Datetime</label>
+				<input type="datetime" name="datetime"></input>
+			</p>
+		</fieldset>
+		<fieldset>
+			<p>
+				<label for="location">Location</label>
+				<select name="location">
+				</select>
+			</p>
+			<p>
+			</p>
+		</fieldset>
+
+		<fieldset>
+			<input type="submit" value="Lodge Murder"></input>
+		</fieldset>
+	</form>
+</article>

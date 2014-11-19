@@ -14,7 +14,7 @@ class HTTPTestCase(AsyncHTTPTestCase):
 
 		return server().app()
 	
-	def test(self):
+	def test_00_create_game(self):
 		url = '/'
 		kwargs = {'method': 'GET'}
 		response = self.fetch(url, **kwargs)
@@ -82,6 +82,26 @@ class HTTPTestCase(AsyncHTTPTestCase):
 			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
 		
 		url = '/0'
+		kwargs = {'method': 'GET'}
+		response = self.fetch(url, **kwargs)
+		if response.error:
+			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
+		
+
+	def test_01_lodge_murder(self):
+		url = '/0/admin/lodge'
+		kwargs = {'method': 'GET'}
+		response = self.fetch(url, **kwargs)
+		if response.error:
+			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
+		
+		url = '/murder'
+		kwargs = {'method': 'POST', 'headers': {'Accept-Language': 'en-US,en;q=0.5', 'Referer': 'http://localhost:8888/0/admin/lodge', 'Content-Type': 'application/x-www-form-urlencoded', 'Accept-Encoding': 'gzip, deflate', 'Content-Length': '36', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Connection': 'keep-alive', 'Host': 'localhost:8888', 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:33.0) Gecko/20100101 Firefox/33.0', 'Cookie': '_ga=GA1.1.1770417376.1414621567'}, 'body': b'game=0&murderer=5&victim=4&datetime='}
+		response = self.fetch(url, **kwargs)
+		if response.error:
+			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
+		
+		url = '/0/profiles'
 		kwargs = {'method': 'GET'}
 		response = self.fetch(url, **kwargs)
 		if response.error:
