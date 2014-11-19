@@ -5,7 +5,7 @@ import sqlite3
 from .home import home
 from .game import game, Game
 from .player import player, profiles, Player
-from .murder import Murder
+from .murder import murder, lodge, Murder
 from .admin import admin
 
 def init_db(database=None):
@@ -28,11 +28,13 @@ def init_server():
 	# API pages
 	server.register('/game', game)
 	server.register('/player', player, post=player)
+	server.register('/murder', murder, post=murder)
 
 	# HTML pages
 	game_id = '/([0-9a-zA-Z-]+)'
 	server.register('/admin/?', admin)
 	server.register('{}/admin/?'.format(game_id), admin)
+	server.register('{}/admin/lodge/?'.format(game_id), lodge)
 	server.register('{}/profiles/?'.format(game_id), profiles)
 	server.register('{}?/?'.format(game_id), home)
 
