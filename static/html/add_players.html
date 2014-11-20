@@ -1,0 +1,11 @@
+<article>
+	<h2>Add Players</h2>
+
+	<form action="/player" method="POST" enctype="multipart/form-data">
+		<input type="hidden" name="game" value="{{ game_id }}"></input>
+		<input type="file" name="players" placeholder="Upload players CSV"></input>
+		<p>
+			<input type="submit" value="Add players"></input>
+		</p>
+	</form>
+</article>
