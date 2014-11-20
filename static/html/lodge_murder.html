@@ -7,7 +7,7 @@
 		<fieldset>
 			<p>
 				<label for="murderer">Murderer</label>
-				<select name="murderer">
+				<select name="murderer" required>
 				{% for player in players %}
 					<option value="{{ player['id'] }}">
 						{{ escape(player['name']) }} - {{ escape(player['type']) }}
@@ -17,7 +17,7 @@
 			</p>
 			<p>
 				<label for="victim">Victim</label>
-				<select name="victim">
+				<select name="victim" required>
 				{% for player in players %}
 					<option value="{{ player['id'] }}">
 						{{ escape(player['name']) }} - {{ escape(player['type']) }}

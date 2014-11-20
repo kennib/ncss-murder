@@ -3,7 +3,7 @@
 
 	<form action="/player" method="POST" enctype="multipart/form-data">
 		<input type="hidden" name="game" value="{{ game_id }}"></input>
-		<input type="file" name="players" placeholder="Upload players CSV"></input>
+		<input type="file" name="players" required placeholder="Upload players CSV"></input>
 		<p>
 			<input type="submit" value="Add players"></input>
 		</p>
