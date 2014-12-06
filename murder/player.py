@@ -32,8 +32,8 @@ def profiles(response, game_id=None):
 def player(response):
 	game_id = response.get_field('game')
 	name, type, contents = response.get_file('players')
-
-	if type == 'text/csv':
+	
+	if type == 'text/csv' or type == 'application/vnd.ms-excel':
 		attributes_line, *player_lines = contents.decode("utf-8").splitlines()
 		attributes = attributes_line.split(',')
 		players = [dict([(attr, line.split(',')[i]) for i, attr in enumerate(attributes)]) for line in player_lines]
