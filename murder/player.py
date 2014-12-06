@@ -23,6 +23,10 @@ def profiles_template(game_id, players) -> str:
 	profiles = templater.load('profiles.html').generate(game_id=game_id, profiles=players)
 	return inside_page(profiles, game_id=game_id)
 
+def profile_template(game_id, player) -> str:
+	profile = templater.load('profile.html').generate(game_id=game_id, player=player)
+	return inside_page(profile, game_id=game_id)
+
 def profiles(response, game_id=None):
 	player_query = Player.select(game=game_id)
 	players = [{'id': id, 'name': name, 'type': type} for id, game, name, type in player_query]
@@ -31,7 +35,8 @@ def profiles(response, game_id=None):
 
 def profile(response, game_id=None, player_id=None):
 	player = Player.find(game=game_id, name=player_id.replace('+', ' '))
-	response.write(player.name + ' ' + player.type)
+	template = profile_template(game_id, player)
+	response.write(template)
 
 def player(response):
 	game_id = response.get_field('game')
