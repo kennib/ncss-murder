@@ -29,6 +29,9 @@ def profiles(response, game_id=None):
 	template = profiles_template(game_id, players)
 	response.write(template)
 
+def profile(response, game_id=None, player_id=None):
+	response.write(player_id)
+
 def player(response):
 	game_id = response.get_field('game')
 	name, type, contents = response.get_file('players')
