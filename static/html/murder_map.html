@@ -17,5 +17,11 @@
 		}).addTo(map);
 		
 		var murders = {% raw murders %};
+		var markers = murders.filter(function(murder) {
+			return murder.lat && murder.lng;
+		}).map(function(murder) {
+			var marker = L.marker([murder.lat, murder.lng]).addTo(map);
+			return marker;
+		});
 	</script>
 </article>
