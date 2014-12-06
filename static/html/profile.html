@@ -3,6 +3,7 @@
 	<h3>{{ player.type }}</h3>
 	{% if murder %}
 	<p>DEAD</p>
+	<p>Killed by {{ murder.murderer.name }}</p>
 	{% else %}
 	<p>ALIVE</p>
 	{% end %}

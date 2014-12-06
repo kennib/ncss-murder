@@ -7,6 +7,13 @@ class Player(Model):
 	def __init__(self, id, game, name, type):
 		super(Player, self).__init__()
 		self.id, self.game, self.name, self.type = id, game, name, type
+		
+	def murder(self):
+		from .murder import Murder
+		murder = Murder.find(victim=self.id)
+		murderer = Player.find(id=murder.murderer)
+		murder.murderer = murderer
+		return murder
 
 	@classmethod
 	def init_db(cls):
@@ -34,9 +41,8 @@ def profiles(response, game_id=None):
 	response.write(template)
 
 def profile(response, game_id=None, player_id=None):
-	from .murder import Murder
 	player = Player.find(game=game_id, name=player_id.replace('+', ' '))
-	murder = Murder.find(victim=player.id)
+	murder = player.murder()
 	template = profile_template(game_id, player, murder)
 	response.write(template)
 
