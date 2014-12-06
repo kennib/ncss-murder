@@ -60,6 +60,14 @@ def murder_list(response, game_id=None):
 	murders = Murder.all_murders(game_id)
 	response.write(murder_list_template(game_id, murders))
 
+def murder_map_template(game_id, murders) -> str:
+	template = templater.load('murder_map.html').generate(game_id=game_id, murders=murders)
+	return inside_page(template, game_id=game_id)
+
+def murder_map(response, game_id=None):
+	murders = Murder.all_murders(game_id)
+	response.write(murder_map_template(game_id, murders))
+
 def murder(response):
 	game_id = response.get_field('game')
 
