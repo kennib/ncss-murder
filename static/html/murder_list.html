@@ -4,7 +4,9 @@
 	<table>
 		<thead>
 			<tr>
+			{% if not profile %}
 				<th>Murderer</th>
+			{% end %}
 				<th>Victim</th>
 				<th>Time of Death</th>
 				<th>Crime scene</th>
@@ -13,7 +15,9 @@
 		<tbody>
 			{% for murder in murders %}
 			<tr>
+			{% if not profile %}
 				<td>{{ murder.murderer }}</td>
+			{% end %}
 				<td>{{ murder.victim }}</td>
 				<td>{{ murder.datetime }}</td>
 				<td>{{ murder.location }}</td>

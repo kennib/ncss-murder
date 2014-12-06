@@ -7,13 +7,22 @@ class Player(Model):
 	def __init__(self, id, game, name, type):
 		super(Player, self).__init__()
 		self.id, self.game, self.name, self.type = id, game, name, type
-		
-	def murder(self):
+
+	def murders(self):
 		from .murder import Murder
-		murder = Murder.find(victim=self.id)
-		murderer = Player.find(id=murder.murderer)
-		murder.murderer = murderer
-		return murder
+		murders = list(Murder.iter(murderer=self.id))
+		for murder in murders:
+			victim = Player.find(id=murder.victim)
+			murder.victim = victim.name
+		return murders
+		
+	def death(self):
+		from .murder import Murder
+		death = Murder.find(victim=self.id)
+		if death:
+			murderer = Player.find(id=death.murderer)
+			death.murderer = murderer
+		return death
 
 	@classmethod
 	def init_db(cls):
@@ -30,8 +39,8 @@ def profiles_template(game_id, players) -> str:
 	profiles = templater.load('profiles.html').generate(game_id=game_id, profiles=players)
 	return inside_page(profiles, game_id=game_id)
 
-def profile_template(game_id, player, murder) -> str:
-	profile = templater.load('profile.html').generate(game_id=game_id, player=player, murder=murder)
+def profile_template(game_id, player, death, murders) -> str:
+	profile = templater.load('profile.html').generate(game_id=game_id, player=player, death=death, murders=murders, profile=True)
 	return inside_page(profile, game_id=game_id)
 
 def profiles(response, game_id=None):
@@ -42,8 +51,9 @@ def profiles(response, game_id=None):
 
 def profile(response, game_id=None, player_id=None):
 	player = Player.find(game=game_id, name=player_id.replace('+', ' '))
-	murder = player.murder()
-	template = profile_template(game_id, player, murder)
+	death = player.death()
+	murders = player.murders()
+	template = profile_template(game_id, player, death, murders)
 	response.write(template)
 
 def player(response):

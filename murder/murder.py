@@ -53,7 +53,7 @@ def lodge(response, game_id=None):
 	response.write(lodge_template(game_id))
 
 def murder_list_template(game_id, murders) -> str:
-	template = templater.load('murder_list.html').generate(game_id=game_id, murders=murders)
+	template = templater.load('murder_list.html').generate(game_id=game_id, murders=murders, profile=False)
 	return inside_page(template, game_id=game_id)
 
 def murder_list(response, game_id=None):

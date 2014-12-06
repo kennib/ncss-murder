@@ -1,10 +1,12 @@
 <article>
 	<h2>{{ player.name }}</h2>
 	<h3>{{ player.type }}</h3>
-	{% if murder %}
+	{% if death %}
 	<p>DEAD</p>
-	<p>Killed by {{ murder.murderer.name }}</p>
+	<p>Killed by {{ death.murderer.name }}</p>
 	{% else %}
 	<p>ALIVE</p>
 	{% end %}
 </article>
+
+{% include murder_list.html %}
