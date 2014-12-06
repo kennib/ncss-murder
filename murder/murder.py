@@ -57,7 +57,7 @@ def murder_list_template(game_id, murders) -> str:
 	return inside_page(template, game_id=game_id)
 
 def murder_list(response, game_id=None):
-	murders = Murder.all_murders(game_id)
+	murders = list(Murder.all_murders(game_id))
 	response.write(murder_list_template(game_id, murders))
 
 def murder(response):

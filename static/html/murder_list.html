@@ -1,6 +1,7 @@
 <article>
 	<h2>Murders</h2>
 
+{% if murders %}
 	<table>
 		<thead>
 			<tr>
@@ -25,4 +26,12 @@
 			{% end %}
 		</tbody>
 	</table>
+	
+{% else %}
+	{% if profile %}
+		<p>{{ player.name }} is innocent!</p>
+	{% else %}
+		<p>There are no murders... yet.</p>
+	{% end %}
+{% end %}
 </article>
