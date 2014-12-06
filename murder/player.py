@@ -30,7 +30,8 @@ def profiles(response, game_id=None):
 	response.write(template)
 
 def profile(response, game_id=None, player_id=None):
-	response.write(player_id)
+	player = Player.find(game=game_id, name=player_id.replace('+', ' '))
+	response.write(player.name + ' ' + player.type)
 
 def player(response):
 	game_id = response.get_field('game')
