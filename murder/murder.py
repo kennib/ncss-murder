@@ -1,3 +1,5 @@
+import json
+
 from .db import Model
 from .player import Player
 from .template import templater, inside_page
@@ -65,7 +67,18 @@ def murder_map_template(game_id, murders) -> str:
 	return inside_page(template, game_id=game_id)
 
 def murder_map(response, game_id=None):
-	murders = Murder.all_murders(game_id)
+	murders = list(Murder.all_murders(game_id))
+	murders = [{
+		'id': murder.id,
+		'game': murder.game, 
+		'murderer': murder.murderer, 
+		'victim': murder.victim, 
+		'datetime': murder.datetime, 
+		'lat': murder.lat, 
+		'lng': murder.lng, 
+		'location': murder.location} 
+		for murder in murders]
+	murders = json.dumps(murders)
 	response.write(murder_map_template(game_id, murders))
 
 def murder(response):
