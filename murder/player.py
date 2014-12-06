@@ -44,8 +44,7 @@ def profile_template(game_id, player, death, murders) -> str:
 	return inside_page(profile, game_id=game_id)
 
 def profiles(response, game_id=None):
-	player_query = Player.select(game=game_id)
-	players = [{'id': id, 'name': name, 'type': type} for id, game, name, type in player_query]
+	players = list(Player.iter(game=game_id))
 	template = profiles_template(game_id, players)
 	response.write(template)
 
