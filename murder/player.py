@@ -23,8 +23,8 @@ def profiles_template(game_id, players) -> str:
 	profiles = templater.load('profiles.html').generate(game_id=game_id, profiles=players)
 	return inside_page(profiles, game_id=game_id)
 
-def profile_template(game_id, player) -> str:
-	profile = templater.load('profile.html').generate(game_id=game_id, player=player)
+def profile_template(game_id, player, murder) -> str:
+	profile = templater.load('profile.html').generate(game_id=game_id, player=player, murder=murder)
 	return inside_page(profile, game_id=game_id)
 
 def profiles(response, game_id=None):
@@ -34,8 +34,10 @@ def profiles(response, game_id=None):
 	response.write(template)
 
 def profile(response, game_id=None, player_id=None):
+	from .murder import Murder
 	player = Player.find(game=game_id, name=player_id.replace('+', ' '))
-	template = profile_template(game_id, player)
+	murder = Murder.find(victim=player.id)
+	template = profile_template(game_id, player, murder)
 	response.write(template)
 
 def player(response):

@@ -1,4 +1,9 @@
 <article>
 	<h2>{{ player.name }}</h2>
 	<h3>{{ player.type }}</h3>
+	{% if murder %}
+	<p>DEAD</p>
+	{% else %}
+	<p>ALIVE</p>
+	{% end %}
 </article>
