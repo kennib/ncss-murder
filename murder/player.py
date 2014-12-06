@@ -45,6 +45,8 @@ def profile_template(game_id, player, death, murders) -> str:
 
 def profiles(response, game_id=None):
 	players = list(Player.iter(game=game_id))
+	for player in players:
+                player.death = player.death() != None
 	template = profiles_template(game_id, players)
 	response.write(template)
 

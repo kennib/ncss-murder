@@ -4,6 +4,7 @@
 			<tr>
 				<th>Name</th>
 				<th>Role</th>
+				<th>Dead or Alive?</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -11,6 +12,11 @@
 			<tr>
 				<td>{{ player.name }}</td>
 				<td>{{ player.type }}</td>
+				{% if player.death == True %}
+					<td>Dead</td>
+				{% else %}
+					<td>Alive</td>
+				{% end %}
 			</tr>
 		{% end %}
 		</tbody>
