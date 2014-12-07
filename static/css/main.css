@@ -175,6 +175,50 @@ a:hover {
 	text-decoration: underline;
 }
 
+/* Forms */
+form {
+
+}
+
+form fieldset {
+	padding: 15px;
+
+	text-align: right;
+
+	border: none;
+	border-bottom: 2px solid #f3f3f3;
+}
+
+form fieldset:last-child {
+	border: none;
+}
+
+form fieldset label {
+	display: block;
+	float: left;
+}
+
+form fieldset select,
+form fieldset input:not([type=submit]) {
+	display: block;
+	width: 100%;
+
+	font-size: 30px;
+	font-family: 'Josefin Sans';
+}
+
+@media screen and (min-width:750px) and (max-width: 999px) {
+	form fieldset select,
+	form fieldset input:not([type=submit]) {
+		display: inline-block;
+		box-sizing: border-box;
+		width: 55%;
+
+		font-size: 20px;
+	}
+}
+
+
 /* Buttons */
 input[type=submit],
 button {
