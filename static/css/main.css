@@ -13,29 +13,38 @@ header {
 	top: 0px;
 	width: 100%;
 	box-sizing: border-box;
-	padding: 10px;
 
 	background-color: white;
 	box-shadow: 0px 4px 4px rgba(0,0,0, 0.2);
 }
 
 header h1 {
+	margin: 0px;
+
 	text-align: center;
 	white-space: pre;
 }
 
 header h1:before,
 header h1:after {
-	content: '――――――――';
-	margin: 0px 4px;
-	color: #ad213a;
+	display: block;
+	margin: 4px 4px;
+	margin-bottom: 8px;
+
+	content: '';
+	font-size: 0px;
+
+	border: 2px solid #ad213a;
+}
+header h1:before {
+	margin-bottom: -20px;
 }
 
 .hamburger {
 	position: fixed;
 
-	font-size: 25px;
-	line-height: 1;
+	margin: 4px;
+	font-size: 33px;
 }
 
 nav {
@@ -66,8 +75,20 @@ nav > a:hover {
 }
 
 @media screen and (min-width:750px) and (max-width: 999px) {
+	header {
+		padding: 10px;
+	}
+
 	header h1 {
+		margin: 10px 0px;
 		white-space: normal;
+	}
+
+	header h1:before,
+	header h1:after {
+		display: inline-block;
+		width: 200px;
+		margin-bottom: 8px;
 	}
 
 	.hamburger {
@@ -100,6 +121,7 @@ nav > a:hover {
 @media screen and (min-width: 1000px) {
 	header {
 		width: 1000px;
+		padding: 10px;
 	}
 	
 	.hamburger {
@@ -107,7 +129,15 @@ nav > a:hover {
 	}
 
 	header h1 {
+		margin: 10px 0px;
 		white-space: normal;
+	}
+
+	header h1:before,
+	header h1:after {
+		display: inline-block;
+		width: 300px;
+		margin-bottom: 8px;
 	}
 
 	nav.closed {
@@ -131,7 +161,7 @@ article {
 	margin-top: 10px;
 	margin-bottom: 10px;
 
-	padding: 10px;
+	padding: 10px		;
 
 	background-color: white;
 	box-shadow: 0px 2px 0px rgba(0,0,0, 0.2);
@@ -142,8 +172,13 @@ article {
 article > h2:before,
 article > h2:after {
 	display: block;
-	content: '――――――――';
-	margin: 0px 4px;
+	margin: 4px 4px;
+	margin-bottom: 8px;
+
+	content: '';
+	font-size: 0px;
+
+	border: 1.5px solid black;
 }
 
 article table {
@@ -153,14 +188,16 @@ article table {
 @media screen and (min-width:750px) and (max-width: 999px) {
 	article > h2:before,
 	article > h2:after {
-		display: inline;
+		display: inline-block;
+		width: 100px;
 	}
 }
 
 @media screen and (min-width: 1000px) {
 	article > h2:before,
 	article > h2:after {
-		display: inline;
+		display: inline-block;
+		width: 200px;
 	}
 }
 
@@ -195,7 +232,7 @@ form fieldset:last-child {
 
 form fieldset label {
 	display: block;
-	float: left;
+	text-align: left;
 }
 
 form fieldset select,
@@ -207,7 +244,11 @@ form fieldset input:not([type=submit]) {
 	font-family: 'Josefin Sans';
 }
 
-@media screen and (min-width:750px) and (max-width: 999px) {
+@media screen and (min-width:750px) {
+	form fieldset label {
+		float: left;
+	}
+
 	form fieldset select,
 	form fieldset input:not([type=submit]) {
 		display: inline-block;
