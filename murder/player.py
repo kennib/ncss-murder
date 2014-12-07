@@ -8,6 +8,22 @@ class Player(Model):
 		super(Player, self).__init__()
 		self.id, self.game, self.name, self.type = id, game, name, type
 
+	def murders(self):
+		from .murder import Murder
+		murders = list(Murder.iter(murderer=self.id))
+		for murder in murders:
+			victim = Player.find(id=murder.victim)
+			murder.victim = victim.name
+		return murders
+		
+	def death(self):
+		from .murder import Murder
+		death = Murder.find(victim=self.id)
+		if death:
+			murderer = Player.find(id=death.murderer)
+			death.murderer = murderer
+		return death
+
 	@classmethod
 	def init_db(cls):
 		CREATE = """CREATE TABLE player (
@@ -23,10 +39,22 @@ def profiles_template(game_id, players) -> str:
 	profiles = templater.load('profiles.html').generate(game_id=game_id, profiles=players)
 	return inside_page(profiles, game_id=game_id)
 
+def profile_template(game_id, player, death, murders) -> str:
+	profile = templater.load('profile.html').generate(game_id=game_id, player=player, death=death, murders=murders, profile=True)
+	return inside_page(profile, game_id=game_id)
+
 def profiles(response, game_id=None):
-	player_query = Player.select(game=game_id)
-	players = [{'id': id, 'name': name, 'type': type} for id, game, name, type in player_query]
+	players = list(Player.iter(game=game_id))
+	for player in players:
+                player.death = player.death() != None
 	template = profiles_template(game_id, players)
+	response.write(template)
+
+def profile(response, game_id=None, player_id=None):
+	player = Player.find(game=game_id, name=player_id.replace('+', ' '))
+	death = player.death()
+	murders = player.murders()
+	template = profile_template(game_id, player, death, murders)
 	response.write(template)
 
 def player(response):
