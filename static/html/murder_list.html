@@ -1,10 +1,13 @@
 <article>
 	<h2>Murders</h2>
 
+{% if murders %}
 	<table>
 		<thead>
 			<tr>
+			{% if not profile %}
 				<th>Murderer</th>
+			{% end %}
 				<th>Victim</th>
 				<th>Time of Death</th>
 				<th>Crime scene</th>
@@ -13,11 +16,22 @@
 		<tbody>
 			{% for murder in murders %}
 			<tr>
-				<td>{{ murder.murderer }}</td>
-				<td>{{ murder.victim }}</td>
+			{% if not profile %}
+				<td>{% raw template('profile_link.html', game_id=game_id, player_name=murder.murderer) %}</td>
+			{% end %}
+				<td>{% raw template('profile_link.html', game_id=game_id, player_name=murder.victim) %}</td>
 				<td>{{ murder.datetime }}</td>
 				<td>{{ murder.location }}</td>
 			</tr>
 			{% end %}
 		</tbody>
-</articl>
+	</table>
+	
+{% else %}
+	{% if profile %}
+		<p>{{ player.name }} is innocent!</p>
+	{% else %}
+		<p>There are no murders... yet.</p>
+	{% end %}
+{% end %}
+</article>

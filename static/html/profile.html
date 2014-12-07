@@ -1,0 +1,12 @@
+<article>
+	<h2>{{ player.name }}</h2>
+	<h3>{{ player.type }}</h3>
+	{% if death %}
+	<p>DEAD</p>
+	<p>Killed by {% raw template('profile_link.html', game_id=game_id, player_name=death.murderer.name) %}</p>
+	{% else %}
+	<p>ALIVE</p>
+	{% end %}
+</article>
+
+{% include murder_list.html %}
