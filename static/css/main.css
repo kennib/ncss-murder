@@ -232,7 +232,7 @@ form fieldset:last-child {
 
 form fieldset label {
 	display: block;
-	float: left;
+	text-align: left;
 }
 
 form fieldset select,
@@ -244,7 +244,11 @@ form fieldset input:not([type=submit]) {
 	font-family: 'Josefin Sans';
 }
 
-@media screen and (min-width:750px) and (max-width: 999px) {
+@media screen and (min-width:750px) {
+	form fieldset label {
+		float: left;
+	}
+
 	form fieldset select,
 	form fieldset input:not([type=submit]) {
 		display: inline-block;
