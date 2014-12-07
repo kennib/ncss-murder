@@ -10,7 +10,7 @@
 		<tbody>
 		{% for player in profiles %}
 			<tr>
-				<td>{{ player.name }}</td>
+				<td>{% raw template('profile_link.html', game_id=game_id, player_name=player.name) %}</td>
 				<td>{{ player.type }}</td>
 				{% if player.death == True %}
 					<td>Dead</td>
