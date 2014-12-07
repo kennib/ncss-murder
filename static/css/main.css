@@ -32,6 +32,7 @@ header h1:after {
 	margin-bottom: 8px;
 
 	content: '';
+	font-size: 0px;
 
 	border: 2px solid #ad213a;
 }
@@ -175,6 +176,7 @@ article > h2:after {
 	margin-bottom: 8px;
 
 	content: '';
+	font-size: 0px;
 
 	border: 1.5px solid black;
 }
