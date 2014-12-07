@@ -1,0 +1,14 @@
+<article>
+	<h2>New Game</h2>
+
+	<button onClick="newGame()">
+		Create a New Game
+	</button>
+</article>
+
+<script>
+	function newGame() {
+		var year = new Date().getFullYear();
+		location.assign('/game?year='+year);
+	}
+</script>
