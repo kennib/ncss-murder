@@ -1,4 +1,8 @@
 <article>
 	<h2>Most Wanted</h2>
+	{% if most_wanted %}
 	<p>{% raw template('profile_link.html', game_id=game_id, player_name=most_wanted.name) %} is the most wanted with {{ most_wanted.murders }} kills.</p>
+	{% else %}
+	<p>Everyone is innocent! For now...</p>
+	{% end %}
 </article>
