@@ -5,7 +5,7 @@ import sqlite3
 from .home import home
 from .game import game, Game
 from .player import player, profiles, profile, Player
-from .murder import murder, lodge, murder_list, Murder
+from .murder import murder, lodge, murder_list, murder_map, Murder
 from .admin import admin
 
 def init_db(database=None):
@@ -38,6 +38,7 @@ def init_server():
 	server.register('{}/admin/lodge/?'.format(game_id), lodge)
 	server.register('{}/profiles/?'.format(game_id), profiles)
 	server.register('{}/profiles/{}/?'.format(game_id, player_id), profile)
+	server.register('{}/map/?'.format(game_id), murder_map)
 	server.register('{}/murders/?'.format(game_id), murder_list)
 	server.register('{}?/?'.format(game_id), home)	
 
