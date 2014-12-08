@@ -16,7 +16,7 @@
 			minZoom: 13,
 		}).addTo(map);
 		
-		var murders = {% raw murders %};
+		var murders = {% raw json_encode(list(murder.__dict__ for murder in murders)) %};
 		var markers = murders.filter(function(murder) {
 			return murder.lat && murder.lng;
 		}).map(function(murder) {

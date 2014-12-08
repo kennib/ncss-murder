@@ -11,10 +11,14 @@ def stats_template(game_id, players, murders, **kwargs) -> str:
 def stats(response, game_id=None):
 	players = list(Player.iter(game=game_id))
 	murders = list(Murder.iter(game=game_id))
+	wanted = most_wanted(murders)
 
+	response.write(stats_template(game_id, players, murders, most_wanted=wanted))
+
+def most_wanted(murders):
 	murder_counts = Counter(murder.murderer for murder in murders)
 	murderer_id, count = max(murder_counts.items())
-	most_wanted = Player.find(game=game_id, id=murderer_id)
+	most_wanted = Player.find(id=murderer_id)
 	most_wanted.murders = count
 
-	response.write(stats_template(game_id, players, murders, most_wanted=most_wanted))
+	return most_wanted
