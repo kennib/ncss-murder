@@ -6,7 +6,7 @@ from .home import home
 from .game import game, Game
 from .player import player, profiles, profile, Player
 from .murder import murder, lodge, murder_list, Murder
-from .admin import admin
+from .admin import admin, login_page, login
 
 def init_db(database=None):
 	tables = [Game, Player, Murder]
@@ -29,6 +29,7 @@ def init_server():
 	server.register('/game', game)
 	server.register('/player', player, post=player)
 	server.register('/murder', murder, post=murder)
+	server.register('/login', login_page, post=login)
 
 	# HTML pages
 	game_id = '/([0-9a-zA-Z-]+)'
