@@ -48,4 +48,4 @@ def game(response):
 
 	Game.add(id=game_id, year=year, number=number)
 
-	response.redirect('/{}'.format(game_id))
+	response.redirect('/{}/admin'.format(game_id))

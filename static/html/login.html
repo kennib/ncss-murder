@@ -1,0 +1,13 @@
+<article>
+	{% if failed %}
+	<p>The password you gave is incorrect. Try again.</p>
+	{% end %}
+	<form method="POST">
+		<input type="hidden" name="game" value="{{ game_id }}"></input>
+
+		<fieldset>
+			<label for="password">Password</label>
+			<input type="password" name="password" autofocus></input>
+		</fieldset>
+	</form>
+</article>

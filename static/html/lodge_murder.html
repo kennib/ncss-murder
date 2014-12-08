@@ -33,7 +33,7 @@
 		<fieldset>
 			<p>
 				<label for="datetime">Datetime</label>
-				<input type="datetime" name="datetime"></input>
+				<input type="datetime-local" name="datetime"></input>
 			</p>
 		</fieldset>
 		<fieldset>
@@ -68,5 +68,11 @@
 			form.lat.value = latLngs[location].lat;
 			form.lng.value = latLngs[location].lng;
 		}
+	</script>
+	<script>
+		var d = new Date();
+		var now = d.toISOString().slice(0, 11) + d.getHours() + ':' + d.getMinutes();
+		var datetime = document.querySelector('input[type=datetime-local]');
+		datetime.value = now;
 	</script>
 </article>

@@ -1,3 +1,7 @@
-{% include 'lodge_murder.html' %}
-{% include 'add_players.html' %}
+{% if game_id %}
+	{% if players %}
+		{% include 'lodge_murder.html' %}
+	{% end %}
+	{% include 'add_players.html' %}
+{% end %}
 {% include 'new_game.html' %}
