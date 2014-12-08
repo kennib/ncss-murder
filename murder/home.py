@@ -12,6 +12,6 @@ def home(response, game_id=None):
 			latest_id, year, number = latest
 			response.redirect('/'+str(latest_id))
 		else:
-			response.redirect('/admin')
+			response.redirect('/login')
 	else:
 		response.write(home_template(game_id))
