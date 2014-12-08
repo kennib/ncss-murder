@@ -6,6 +6,7 @@ from .home import home
 from .game import game, Game
 from .player import player, profiles, profile, Player
 from .murder import murder, lodge, murder_list, murder_map, Murder
+from .stats import stats
 from .admin import admin, login_page, login
 
 def init_db(database=None):
@@ -41,6 +42,7 @@ def init_server():
 	server.register('{}/profiles/{}/?'.format(game_id, player_id), profile)
 	server.register('{}/map/?'.format(game_id), murder_map)
 	server.register('{}/murders/?'.format(game_id), murder_list)
+	server.register('{}/stats/?'.format(game_id), stats)
 	server.register('{}?/?'.format(game_id), home)	
 
 	return server
