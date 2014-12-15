@@ -3,7 +3,7 @@
 	<p>The password you gave is incorrect. Try again.</p>
 	{% end %}
 	<form method="POST">
-		<input type="hidden" name="game" value="{{ game_id }}"></input>
+		<input type="hidden" name="game" value="{{ game_id if game_id else '' }}"></input>
 
 		<fieldset>
 			<label for="password">Password</label>
