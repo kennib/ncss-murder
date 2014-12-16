@@ -79,4 +79,7 @@ def player(response):
 	for player in players:
 		Player.add(**player)
 
+	from .achievement import Achievement
+	Achievement.total_progress(game_id)
+
 	response.redirect('/{}/profiles'.format(game_id))
