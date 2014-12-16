@@ -96,6 +96,14 @@ class Model(object):
 		return inst
 
 	@classmethod
+	def find_or_create(cls, **kwargs):
+		try:
+			return cls.get(**kwargs)
+		except DoesNotExistError:
+			cls.add(**kwargs)
+			return cls.get(**kwargs)
+
+	@classmethod
 	def get(cls, **kwargs):
 		"""get(**kwargs) -> instance
 
@@ -104,3 +112,4 @@ class Model(object):
 		inst = cls.find(**kwargs)
 		if inst is None:
 			raise DoesNotExistError("instance {} does not exist in {}".format(kwargs, cls._table))
+		return inst

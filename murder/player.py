@@ -24,6 +24,10 @@ class Player(Model):
 			death.murderer = murderer
 		return death
 
+	def achievements(self):
+		from .achievement import PlayerAchievement
+		return PlayerAchievement.find_achievements(player=self.id)
+
 	@classmethod
 	def init_db(cls):
 		CREATE = """CREATE TABLE player (
@@ -39,8 +43,8 @@ def profiles_template(game_id, players) -> str:
 	profiles = templater.load('profiles.html').generate(game_id=game_id, profiles=players)
 	return inside_page(profiles, game_id=game_id)
 
-def profile_template(game_id, player, death, murders) -> str:
-	profile = templater.load('profile.html').generate(game_id=game_id, player=player, death=death, murders=murders, profile=True)
+def profile_template(game_id, player, death, murders, achievements) -> str:
+	profile = templater.load('profile.html').generate(game_id=game_id, player=player, death=death, murders=murders, achievements=achievements, profile=True)
 	return inside_page(profile, game_id=game_id)
 
 def profiles(response, game_id=None):
@@ -54,7 +58,8 @@ def profile(response, game_id=None, player_id=None):
 	player = Player.find(game=game_id, name=player_id.replace('+', ' '))
 	death = player.death()
 	murders = player.murders()
-	template = profile_template(game_id, player, death, murders)
+	achievements = player.achievements()
+	template = profile_template(game_id, player, death, murders, achievements)
 	response.write(template)
 
 def player(response):

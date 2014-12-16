@@ -41,22 +41,34 @@ class PlayerAchievement(Model):
 		super(PlayerAchievement, self).__init__()
 		self.id, self.achievement, self.game, self.player, self.progress = id, achievement, game, player, progress
 
+	def increment_progress(self, amount=1):
+		self.progress = amount if pa.progresss == None else self.progress+amount
+		self.update(progress=self.progress)
+
+	@classmethod
+	def find_achievements(cls, player):
+		achievements = list(Achievement.iter())
+		for achievement in achievements:
+			pa = PlayerAchievement.find_or_create(achievement=achievement.id, player=player)
+			achievement.progress = pa.progress
+
+		return achievements
+
 	@classmethod
 	def init_db(cls):
 		CREATE = """CREATE TABLE IF NOT EXISTS player_achievement (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			achievement INTEGER NOT NULL references achievement (id),
-			game INTEGER NOT NULL references game (id),
 			player INTEGER NOT NULL references player (id),
-			progress INTEGER,
+			progress INTEGER DEFAULT 0,
 			UNIQUE (player, achievement)
 		)"""
 		cls._sql(CREATE)
 
-def murder_list_template(game_id, achievements) -> str:
-	template = templater.load('achievements.html').generate(game_id=game_id, achievements=achievements)
+def achievements_template(game_id, achievements) -> str:
+	template = templater.load('achievements.html').generate(game_id=game_id, achievements=achievements, profile=False)
 	return inside_page(template, game_id=game_id)
 
 def achievements(response, game_id=None):
 	achievements = list(Achievement.iter())
-	response.write(murder_list_template(game_id, achievements))
+	response.write(achievements_template(game_id, achievements))

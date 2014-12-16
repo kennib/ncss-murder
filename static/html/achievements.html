@@ -10,6 +10,11 @@
 			<p>
 				{{ achievement.description }}
 			</p>
+			{% if profile and achievement.goal %}
+			<p>
+				{{ achievement.progress }} / {{ achievement.goal }} {{ achievement.unit }}
+			</p>
+			{% end %}
 		</li>
 	{% end %}
 	</ul>
