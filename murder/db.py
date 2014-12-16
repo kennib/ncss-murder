@@ -2,6 +2,9 @@ import sqlite3
 
 from tornado.ncss import ncssbook_log
 
+class DoesNotExistError(LookupError):
+    pass
+
 class Model(object):
 	_conn = sqlite3.connect('ncssmurder.db', isolation_level=None)
 	_table = None

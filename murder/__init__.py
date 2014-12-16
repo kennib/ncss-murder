@@ -8,9 +8,10 @@ from .player import player, profiles, profile, Player
 from .murder import murder, lodge, murder_list, murder_map, Murder
 from .stats import stats
 from .admin import admin, login_page, login
+from .achievement import achievements, Achievement, PlayerAchievement
 
 def init_db(database=None):
-	tables = [Game, Player, Murder]
+	tables = [Game, Player, Murder, Achievement, PlayerAchievement]
 	for table in tables:
 		# Set the database connection
 		if database:
@@ -43,6 +44,7 @@ def init_server():
 	server.register('{}/map/?'.format(game_id), murder_map)
 	server.register('{}/murders/?'.format(game_id), murder_list)
 	server.register('{}/stats/?'.format(game_id), stats)
+	server.register('{}/achievements/?'.format(game_id), achievements)
 	server.register('{}?/?'.format(game_id), home)	
 
 	return server

@@ -1,0 +1,16 @@
+<article>
+	<h2>Achievements</h2>
+
+	<ul>
+	{% for achievement in achievements %}
+		<li>
+			<h3>
+				{{ achievement.name }}
+			</h3>
+			<p>
+				{{ achievement.description }}
+			</p>
+		</li>
+	{% end %}
+	</ul>
+</article>
