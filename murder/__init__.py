@@ -8,10 +8,10 @@ from .player import player, profiles, profile, Player
 from .murder import murder, lodge, murder_list, murder_map, Murder
 from .stats import stats
 from .admin import admin, login_page, login
-from .achievement import achievements, Achievement, PlayerAchievement
+from .achievement import achievements, Achievement, AchievementProgress
 
 def init_db(database=None):
-	tables = [Game, Player, Murder, Achievement, PlayerAchievement]
+	tables = [Game, Player, Murder, Achievement, AchievementProgress]
 	for table in tables:
 		# Set the database connection
 		if database:

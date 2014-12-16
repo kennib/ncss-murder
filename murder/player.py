@@ -25,8 +25,8 @@ class Player(Model):
 		return death
 
 	def achievements(self):
-		from .achievement import PlayerAchievement
-		return PlayerAchievement.find_achievements(player=self.id)
+		from .achievement import AchievementProgress
+		return AchievementProgress.find_achievements(player=self.id)
 
 	@classmethod
 	def init_db(cls):

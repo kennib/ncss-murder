@@ -49,7 +49,7 @@ class MurderAchievement(Achievement):
 			player_murders = [murder for murder in murders
 			                  if murder.murderer == player.id and self.condition(murder)]
 			progress = min(len(player_murders), self.goal)
-			PlayerAchievement.add(achievement=self.id, player=player.id, progress=progress)
+			AchievementProgress.add(achievement=self.id, player=player.id, progress=progress)
 		
 	def condition(self, murder):
 		return True
@@ -65,17 +65,17 @@ Achievement.achievements = [
 	Achievement(None, 'Mafia talk', 'Kill during the night (after 8pm)', 5, 1, 'nighttime hit'),
 ]
 
-class PlayerAchievement(Model):
-	_table = 'player_achievement'
+class AchievementProgress(Model):
+	_table = 'achievement_progress'
 
 	def __init__(self, achievement, game, player, progress):
-		super(PlayerAchievement, self).__init__()
+		super(AchievementProgress, self).__init__()
 		self.id, self.achievement, self.game, self.player, self.progress = id, achievement, game, player, progress
 
 	@classmethod
 	def find_achievements(cls, player):
 		achievements = """SELECT a.*, pa.progress FROM achievement AS a
-			LEFT JOIN player_achievement AS pa ON a.id = pa.achievement
+			LEFT JOIN achievement_progress AS pa ON a.id = pa.achievement
 			WHERE pa.player = ? OR pa.player IS NULL
 			GROUP BY a.id
 			HAVING pa.id = max(pa.id) OR pa.id IS NULL
@@ -91,7 +91,7 @@ class PlayerAchievement(Model):
 
 	@classmethod
 	def init_db(cls):
-		CREATE = """CREATE TABLE IF NOT EXISTS player_achievement (
+		CREATE = """CREATE TABLE IF NOT EXISTS achievement_progress (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			achievement INTEGER NOT NULL references achievement (id),
 			player INTEGER NOT NULL references player (id),
