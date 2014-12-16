@@ -11,11 +11,15 @@ from .admin import admin, login_page, login
 from .achievement import achievements, Achievement, AchievementProgress
 
 def init_db(database=None):
+	# Create a custom database connection
+	if database:
+		conn = sqlite3.connect(database, isolation_level=None)
+
 	tables = [Game, Player, Murder, Achievement, AchievementProgress]
 	for table in tables:
 		# Set the database connection
 		if database:
-			table._conn = sqlite3.connect(database, isolation_level=None)
+			table._conn = conn
 
 		# Initialise the database tables
 		try:
