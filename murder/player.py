@@ -1,4 +1,4 @@
-from .db import Model
+from .db import Model, NonUniqueError
 from .template import templater, inside_page
 
 class Player(Model):
@@ -18,7 +18,11 @@ class Player(Model):
 		
 	def death(self):
 		from .murder import Murder
-		death = Murder.find(victim=self.id)
+		try:
+			death = Murder.find(victim=self.id)
+		except NonUniqueError:
+			death, *_ = Murder.iter(victim=self.id)
+
 		if death:
 			murderer = Player.find(id=death.murderer)
 			death.murderer = murderer
