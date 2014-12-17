@@ -4,6 +4,8 @@ from .template import templater, inside_page
 from .player import Player
 from .murder import Murder
 
+from datetime import time
+
 class Achievement(Model):
 	_table = 'achievement'
 	
@@ -54,6 +56,19 @@ class MurderAchievement(Achievement):
 	def condition(self, murder):
 		return True
 
+class TimeMurderAchievement(MurderAchievement):
+	def __init__(self, id, name, description, points, goal, unit='murders', start_time=None, end_time=None):
+		super(TimeMurderAchievement, self).__init__(id, name, description, points, goal, unit)
+		self.start_time, self.end_time = start_time, end_time
+
+	def condition(self, murder):
+		time = murder.datetime.time()
+		
+		if self.start_time < self.end_time:
+			return self.start_time <= time <= self.end_time
+		else:
+			return self.end_time <= time <= self.start_time
+
 Achievement.achievements = [
 	MurderAchievement(None, '1 kill', 'Get your first kill', 5, 1),
 	MurderAchievement(None, '10 kills', 'Murder two people', 5, 2),
@@ -62,7 +77,7 @@ Achievement.achievements = [
 	MurderAchievement(None, '10000 kills', 'Murder sixteen people', 10, 16),
 	Achievement(None, 'Double kill', 'Kill two people within 10 minutes', 10, 2, 'successive kills'),
 	Achievement(None, 'Innocent victim', 'Died without killing', 5),
-	Achievement(None, 'Mafia talk', 'Kill during the night (after 8pm)', 5, 1, 'nighttime hit'),
+	TimeMurderAchievement(None, 'Mafia talk', 'Kill during the night (after 8pm)', 5, 1, 'nighttime hit', time(hour=20), time(hour=4)),
 ]
 
 class AchievementProgress(Model):
