@@ -10,6 +10,11 @@
 			<p>
 				{{ achievement.description }}
 			</p>
+			<div class="progress-bar">
+				{% if achievement.progress and achievement.goal %}
+				<div class="progress" style="width: {{ achievement.progress / achievement.goal * 100 }}%;"></div>
+				{% end %}
+			</div>
 			{% if profile and achievement.goal %}
 			<p>
 				{{ achievement.progress }} / {{ achievement.goal }} {{ achievement.unit }}

@@ -311,3 +311,25 @@ ul.achievements > li.complete {
 	color: white;
 	background-color: #ad213a;
 }
+
+/* Progress bar */
+.progress-bar {
+	display: block;
+	box-sizing: border-box;
+	padding: 5px;
+	height: 15px;
+
+	text-align: left;
+	line-height: 0px;
+
+	background-color: white;
+	border-radius: 10px;
+}
+
+.progress {
+	display: inline-block;
+	height: 5px;
+
+	background-color: #ad213a;
+	border-radius: 10px;
+}
