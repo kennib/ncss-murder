@@ -79,6 +79,7 @@ Achievement.achievements = [
 	MurderAchievement(None, '10000 kills', 'Murder sixteen people', 10, 16),
 	Achievement(None, 'Double kill', 'Kill two people within 10 minutes', 10, 2, 'successive kills'),
 	Achievement(None, 'Innocent victim', 'Died without killing', 5),
+	TimeMurderAchievement(None, 'Early bird', 'Kill during the morning (before 9am)', 5, 1, 'worm gotten', time(hour=4), time(hour=8)),
 	TimeMurderAchievement(None, 'Mafia talk', 'Kill during the night (after 8pm)', 5, 1, 'nighttime hit', time(hour=20), time(hour=4)),
 ]
 
