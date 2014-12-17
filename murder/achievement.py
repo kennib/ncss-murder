@@ -123,3 +123,10 @@ def achievements_template(game_id, achievements) -> str:
 def achievements(response, game_id=None):
 	achievements = list(Achievement.iter())
 	response.write(achievements_template(game_id, achievements))
+
+def achievement_progress(response):
+	game_id = response.get_field('game')
+
+	Achievement.total_progress(game_id)
+
+	response.write('Achievements progress calculated')

@@ -8,7 +8,7 @@ from .player import player, profiles, profile, Player
 from .murder import murder, lodge, murder_list, murder_map, Murder
 from .stats import stats
 from .admin import admin, login_page, login
-from .achievement import achievements, Achievement, AchievementProgress
+from .achievement import achievements, achievement_progress, Achievement, AchievementProgress
 
 def init_db(database=None):
 	# Create a custom database connection
@@ -35,6 +35,7 @@ def init_server():
 	server.register('/game', game)
 	server.register('/player', player, post=player)
 	server.register('/murder', murder, post=murder)
+	server.register('/achievement_progress', achievement_progress)
 	server.register('/login', login_page, post=login)
 
 	# HTML pages
