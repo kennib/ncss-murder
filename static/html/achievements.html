@@ -3,13 +3,15 @@
 
 	<ul class="achievements">
 	{% for achievement in achievements %}
-		<li class=" {{ 'complete' if achievement.goal and achievement.progress == achievement.goal else '' }}">
+		<li class=" {{ 'complete' if (achievement.goal and achievement.progress == achievement.goal) or achievement.progress else '' }}">
 			<h3>
 				{{ achievement.name }}
 			</h3>
 			<div class="progress-bar">
 				{% if achievement.progress and achievement.goal %}
 				<div class="progress" style="width: {{ achievement.progress / achievement.goal * 100 }}%;"></div>
+				{% elif achievement.progress %}
+				<div class="progress" style="width: 100%;"></div>
 				{% end %}
 			</div>
 			<small>
