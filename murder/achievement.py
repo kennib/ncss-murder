@@ -6,7 +6,7 @@ from .murder import Murder
 
 from datetime import time, timedelta
 from datetime import datetime as dt
-strptime = lambda d: dt.strptime(d, '%Y-%m-%dT%H:%M')
+strptime = lambda d: dt.strptime(d, '%Y-%m-%dT%H:%M') if d else None
 
 from itertools import takewhile
 
