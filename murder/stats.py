@@ -18,7 +18,7 @@ def stats(response, game_id=None):
 def most_wanted(murders):
 	murder_counts = Counter(murder.murderer for murder in murders)
 	if murders:
-		murderer_id, count = max(murder_counts.items())
+		murderer_id, count = max(murder_counts.items(), key=lambda t: t[1])
 		most_wanted = Player.find(id=murderer_id)
 		most_wanted.murders = count
 	else:
