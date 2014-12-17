@@ -4,8 +4,12 @@ from .template import templater, inside_page
 from .player import Player
 from .murder import Murder
 
-from datetime import time
+from datetime import time, timedelta
 from datetime import datetime as dt
+strptime = lambda d: dt.strptime(d, '%Y-%m-%dT%H:%M')
+
+from itertools import takewhile
+
 
 class Achievement(Model):
 	_table = 'achievement'
@@ -63,13 +67,39 @@ class TimeMurderAchievement(MurderAchievement):
 		self.start_time, self.end_time = start_time, end_time
 
 	def condition(self, murder):
-		datetime = dt.strptime(murder.datetime, '%Y-%m-%dT%H:%M')
+		datetime = strptime(murder.datetime)
 		time = datetime.time()
 		
 		if self.start_time < self.end_time:
 			return self.start_time <= time <= self.end_time
 		else:
 			return not self.end_time <= time <= self.start_time
+
+class ConsecutiveMurderAchievement(Achievement):
+	def __init__(self, id, name, description, points, goal, unit='murders', within=timedelta(minutes=10)):
+		super(ConsecutiveMurderAchievement, self).__init__(id, name, description, points, goal, unit)
+		self.within = within
+
+	def progress(self, game):
+		players = Player.iter(game=game)
+		murders = list(Murder.iter(game=game))
+		murders.sort(key=lambda m: m.datetime)
+		for murder in murders:
+			murder.datetime = strptime(murder.datetime)
+
+		for player in players:
+			player_murders = [murder for murder in murders if murder.murderer == player.id]
+			
+			if player_murders:
+				# For each murder check if the next n murders
+				# are within the time limit for the n consecutive murders
+				is_consecutive = lambda a: lambda b: abs(a.datetime - b.datetime) < self.within
+				progress = max([len(list(takewhile(is_consecutive(player_murders[m]), player_murders[m:])))
+								for m, murder in enumerate(player_murders)])
+			else:
+				progress = 0
+					
+			AchievementProgress.add(achievement=self.id, player=player.id, progress=progress)
 
 class DeathAchievement(Achievement):
 	def __init__(self, id, name, description, points, goal=None, unit='murders'):
@@ -98,7 +128,7 @@ Achievement.achievements = [
 	MurderAchievement(None, '100 kills', 'Murder four people', 5, 4),
 	MurderAchievement(None, '1000 kills', 'Murder eight people', 5, 8),
 	MurderAchievement(None, '10000 kills', 'Murder sixteen people', 10, 16),
-	Achievement(None, 'Double kill', 'Kill two people within 10 minutes', 10, 2, 'successive kills'),
+	ConsecutiveMurderAchievement(None, 'Double kill', 'Kill two people within 10 minutes', 10, 2, 'successive kills'),
 	InnocentDeathAchievement(None, 'Innocent victim', 'Died without killing', 5),
 	TimeMurderAchievement(None, 'Early bird', 'Kill during the morning (before 9am)', 5, 1, 'worm gotten', time(hour=4), time(hour=8)),
 	TimeMurderAchievement(None, 'Mafia talk', 'Kill during the night (after 8pm)', 5, 1, 'nighttime hit', time(hour=20), time(hour=4)),
