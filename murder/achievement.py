@@ -71,6 +71,27 @@ class TimeMurderAchievement(MurderAchievement):
 		else:
 			return not self.end_time <= time <= self.start_time
 
+class DeathAchievement(Achievement):
+	def __init__(self, id, name, description, points, goal=None, unit='murders'):
+		super(DeathAchievement, self).__init__(id, name, description, points, goal, unit)
+
+	def progress(self, game):
+		players = Player.iter(game=game)
+		murders = list(Murder.iter(game=game))
+		for player in players:
+			death = any([murder for murder in murders
+			                    if murder.victim == player.id and self.condition(murder)])
+			AchievementProgress.add(achievement=self.id, player=player.id, progress=1 if death else 0)
+		
+	def condition(self, death):
+		return True
+
+class InnocentDeathAchievement(DeathAchievement):
+	def condition(self, death):
+		murders = Murder.select(murderer=death.victim)
+		innocent = murders.fetchone() == None
+		return innocent
+
 Achievement.achievements = [
 	MurderAchievement(None, '1 kill', 'Get your first kill', 5, 1),
 	MurderAchievement(None, '10 kills', 'Murder two people', 5, 2),
@@ -78,7 +99,7 @@ Achievement.achievements = [
 	MurderAchievement(None, '1000 kills', 'Murder eight people', 5, 8),
 	MurderAchievement(None, '10000 kills', 'Murder sixteen people', 10, 16),
 	Achievement(None, 'Double kill', 'Kill two people within 10 minutes', 10, 2, 'successive kills'),
-	Achievement(None, 'Innocent victim', 'Died without killing', 5),
+	InnocentDeathAchievement(None, 'Innocent victim', 'Died without killing', 5),
 	TimeMurderAchievement(None, 'Early bird', 'Kill during the morning (before 9am)', 5, 1, 'worm gotten', time(hour=4), time(hour=8)),
 	TimeMurderAchievement(None, 'Mafia talk', 'Kill during the night (after 8pm)', 5, 1, 'nighttime hit', time(hour=20), time(hour=4)),
 ]
