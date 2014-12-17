@@ -1,6 +1,4 @@
 import json
-from datetime import datetime
-strptime = datetime.strptime
 
 from .db import Model
 from .player import Player
@@ -10,7 +8,7 @@ class Murder(Model):
 	_table='murder'
 
 	def __init__(self, id, game, murderer, victim, datetime, lat, lng, location):
-		self.id, self.game, self.murderer, self.victim, self.datetime, self.lat, self.lng, self.location = id, game, murderer, victim, strptime(datetime, '%Y-%m-%dT%H:%M'), lat, lng, location
+		self.id, self.game, self.murderer, self.victim, self.datetime, self.lat, self.lng, self.location = id, game, murderer, victim, datetime, lat, lng, location
 
 	@classmethod
 	def all_murders(cls, game):

@@ -5,6 +5,7 @@ from .player import Player
 from .murder import Murder
 
 from datetime import time
+from datetime import datetime as dt
 
 class Achievement(Model):
 	_table = 'achievement'
@@ -38,7 +39,7 @@ class Achievement(Model):
 			try:
 				achievement.id = achievement.get(name=achievement.name).id
 			except DoesNotExistError:
-				achievement.id = achievement.add(**achievement.__dict__).id
+				achievement.id = achievement.add(name=achievement.name, description=achievement.description, points=achievement.points, goal=achievement.goal, unit=achievement.unit).id
 
 class MurderAchievement(Achievement):
 	def __init__(self, id, name, description, points, goal, unit='murders'):
@@ -62,12 +63,13 @@ class TimeMurderAchievement(MurderAchievement):
 		self.start_time, self.end_time = start_time, end_time
 
 	def condition(self, murder):
-		time = murder.datetime.time()
+		datetime = dt.strptime(murder.datetime, '%Y-%m-%dT%H:%M')
+		time = datetime.time()
 		
 		if self.start_time < self.end_time:
 			return self.start_time <= time <= self.end_time
 		else:
-			return self.end_time <= time <= self.start_time
+			return not self.end_time <= time <= self.start_time
 
 Achievement.achievements = [
 	MurderAchievement(None, '1 kill', 'Get your first kill', 5, 1),
