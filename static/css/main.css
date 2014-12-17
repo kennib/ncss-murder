@@ -286,3 +286,23 @@ button:active {
 	box-shadow: inset 2px 2px 0px rgba(0,0,0, 0.4);
 	outline: none;
 }
+
+/* Achievements */
+ul.achievements {
+	list-style-type: none;
+	padding: 10px;
+}
+
+ul.achievements > li {
+	display: inline-block;
+	box-sizing: border-box;
+	width: 200px;
+	height: 200px;
+	margin: 5px;
+	padding: 5px;
+
+	vertical-align: bottom;
+	text-align: center;
+
+	background-color: #efefef;
+}
