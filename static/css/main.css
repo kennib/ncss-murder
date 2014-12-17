@@ -316,6 +316,7 @@ ul.achievements > li.complete {
 .progress-bar {
 	display: block;
 	box-sizing: border-box;
+	margin: 5px;
 	padding: 5px;
 	height: 15px;
 

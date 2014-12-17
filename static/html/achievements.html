@@ -7,19 +7,17 @@
 			<h3>
 				{{ achievement.name }}
 			</h3>
-			<p>
-				{{ achievement.description }}
-			</p>
 			<div class="progress-bar">
 				{% if achievement.progress and achievement.goal %}
 				<div class="progress" style="width: {{ achievement.progress / achievement.goal * 100 }}%;"></div>
 				{% end %}
 			</div>
 			{% if profile and achievement.goal %}
-			<p>
-				{{ achievement.progress }} / {{ achievement.goal }} {{ achievement.unit }}
-			</p>
+				<small>{{ achievement.progress }} / {{ achievement.goal }} {{ achievement.unit }}</small>
 			{% end %}
+			<p>
+				{{ achievement.description }}
+			</p>
 		</li>
 	{% end %}
 	</ul>
