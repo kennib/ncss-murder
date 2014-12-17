@@ -12,9 +12,13 @@
 				<div class="progress" style="width: {{ achievement.progress / achievement.goal * 100 }}%;"></div>
 				{% end %}
 			</div>
-			{% if profile and achievement.goal %}
-				<small>{{ achievement.progress }} / {{ achievement.goal }} {{ achievement.unit }}</small>
-			{% end %}
+			<small>
+				{% if profile and achievement.goal %}
+					{{ achievement.progress }} / {{ achievement.goal }} {{ achievement.unit }}
+				{% else %}
+					&nbsp;
+				{% end %}
+			</small>
 			<p>
 				{{ achievement.description }}
 			</p>
