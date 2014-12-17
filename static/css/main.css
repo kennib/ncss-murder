@@ -306,3 +306,8 @@ ul.achievements > li {
 
 	background-color: #efefef;
 }
+
+ul.achievements > li.complete {
+	color: white;
+	background-color: #ad213a;
+}

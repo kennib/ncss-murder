@@ -3,7 +3,7 @@
 
 	<ul class="achievements">
 	{% for achievement in achievements %}
-		<li>
+		<li class=" {{ 'complete' if achievement.goal and achievement.progress == achievement.goal else '' }}">
 			<h3>
 				{{ achievement.name }}
 			</h3>
