@@ -312,6 +312,20 @@ ul.achievements > li.complete {
 	background-color: #ad213a;
 }
 
+ul.achievements > li .points {
+	float: right;
+	min-width: 15px;
+	margin: 5px;
+	padding: 5px;
+
+	text-align: center;
+	font-weight: bold;
+
+	color: #ad213a;
+	background-color: white;
+	border-radius: 20px;;
+}
+
 /* Progress bar */
 .progress-bar {
 	display: block;

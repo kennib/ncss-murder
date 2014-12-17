@@ -4,6 +4,9 @@
 	<ul class="achievements">
 	{% for achievement in achievements %}
 		<li class="{{ 'complete' if (achievement.goal and achievement.progress == achievement.goal) or (not achievement.goal and achievement.progress) else '' }}">
+			<p class="points">
+				{{ achievement.points }}
+			</p>
 			<h3>
 				{{ achievement.name }}
 			</h3>
