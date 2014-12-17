@@ -18,13 +18,13 @@ class Achievement(Model):
 		super(Achievement, self).__init__()
 		self.id, self.name, self.description, self.points, self.goal, self.unit = id, name, description, points, goal, unit
 
-	def progress(self, game):
+	def calculate_progress(self, game):
 		pass
 
 	@classmethod
 	def total_progress(cls, game):
 		for achievement in Achievement.achievements:
-			achievement.progress(game)
+			achievement.calculate_progress(game)
 
 	@classmethod
 	def init_db(cls):
@@ -49,7 +49,7 @@ class MurderAchievement(Achievement):
 	def __init__(self, id, name, description, points, goal, unit='murders'):
 		super(MurderAchievement, self).__init__(id, name, description, points, goal, unit)
 
-	def progress(self, game):
+	def calculate_progress(self, game):
 		players = Player.iter(game=game)
 		murders = list(Murder.iter(game=game))
 		for player in players:
@@ -80,7 +80,7 @@ class ConsecutiveMurderAchievement(Achievement):
 		super(ConsecutiveMurderAchievement, self).__init__(id, name, description, points, goal, unit)
 		self.within = within
 
-	def progress(self, game):
+	def calculate_progress(self, game):
 		players = Player.iter(game=game)
 		murders = list(Murder.iter(game=game))
 		murders.sort(key=lambda m: m.datetime)
@@ -105,7 +105,7 @@ class DeathAchievement(Achievement):
 	def __init__(self, id, name, description, points, goal=None, unit='murders'):
 		super(DeathAchievement, self).__init__(id, name, description, points, goal, unit)
 
-	def progress(self, game):
+	def calculate_progress(self, game):
 		players = Player.iter(game=game)
 		murders = list(Murder.iter(game=game))
 		for player in players:

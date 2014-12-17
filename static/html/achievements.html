@@ -3,27 +3,29 @@
 
 	<ul class="achievements">
 	{% for achievement in achievements %}
-		<li class="{{ 'complete' if (achievement.goal and achievement.progress == achievement.goal) or (not achievement.goal and achievement.progress) else '' }}">
+		<li class="{{ 'complete' if  profile and ((achievement.goal and achievement.progress == achievement.goal) or (not achievement.goal and achievement.progress)) else '' }}">
 			<p class="points">
 				{{ achievement.points }}
 			</p>
 			<h3>
 				{{ achievement.name }}
 			</h3>
+			{% if profile %}
 			<div class="progress-bar">
-				{% if achievement.progress and achievement.goal %}
+				{% if achievement.goal and achievement.progress %}
 				<div class="progress" style="width: {{ achievement.progress / achievement.goal * 100 }}%;"></div>
 				{% elif achievement.progress %}
 				<div class="progress" style="width: 100%;"></div>
 				{% end %}
 			</div>
 			<small>
-				{% if profile and achievement.goal %}
+				{% if achievement.goal %}
 					{{ achievement.progress }} / {{ achievement.goal }} {{ achievement.unit }}
 				{% else %}
 					&nbsp;
 				{% end %}
 			</small>
+			{% end %}
 			<p>
 				{{ achievement.description }}
 			</p>

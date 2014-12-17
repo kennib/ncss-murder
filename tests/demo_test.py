@@ -129,7 +129,6 @@ class HTTPTestCase(AsyncHTTPTestCase):
 		if response.error:
 			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
 		
-	def test_01_lodge_murder(self):
 		url = '/0/admin'
 		kwargs = {'method': 'GET'}
 		response = self.fetch(url, **kwargs)
