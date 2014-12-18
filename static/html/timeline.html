@@ -1,0 +1,64 @@
+<article>
+	<h2>Timeline</h2>
+
+	<div id="timeline"></div>
+	<script type="text/javascript" src="http://cdn.knightlab.com/libs/timeline/latest/js/storyjs-embed.js"></script>
+	<style>
+		.vco-storyjs .timenav h3,
+		.vco-storyjs * {
+			font-family: 'Josefin Sans' !important;
+		}
+
+		.vco-storyjs a {
+			color: #ad213a !important;
+		}
+
+		.vco-timeline .vco-navigation .timenav .content .marker.active .flag .flag-content h3, .vco-timeline .vco-navigation .timenav .content .marker.active .flag-small .flag-content h3,
+		.vco-notouch .vco-navigation .timenav .content .marker.active:hover .flag .flag-content h3, .vco-notouch .vco-navigation .timenav .content .marker.active:hover .flag-small .flag-content h3 {
+			color: #ad213a !important;
+		}
+
+		.vco-timeline .vco-navigation .timenav-background .timenav-line,
+		.vco-timeline .vco-navigation .timenav .content .marker.active .line,
+		.vco-timeline .vco-navigation .timenav .content .marker.active .dot {
+			background-color: #ad213a !important;
+		}
+	</style>
+
+	<script src="/static/js/loadMurders.js"></script>
+	<script src="/static/js/loadSchedule.js"></script>
+	<script>
+		function profile_link(player) {
+			return '<a href="/{{ game_id }}/profiles/'+player.replace(' ', '+')+'">'+player+'</a>'
+		};
+
+		function createTimeline(murders, schedule) {
+			var timeline = {
+				timeline: {
+					type: "default",
+					date: murders.map(function(murder) {
+						return {
+							startDate: murder.datetime,
+							headline: profile_link(murder.victim) + ' killed by ' + profile_link(murder.murderer),
+						};
+					}),
+					era: schedule,
+				},
+			};
+
+			createStoryJS({
+				type: 'timeline',
+				width: '100%',
+				height: '400',
+				source: timeline,
+				embed_id: 'timeline'
+			});
+		};
+
+		loadSchedule({{ game_id }}, function(schedule) {
+			loadMurders({{ game_id }}, function(murders) {
+				createTimeline(murders, schedule);
+			});
+		});
+	</script>
+</article>

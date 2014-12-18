@@ -1,0 +1,68 @@
+[
+	{
+		"startDate": "2015-01-09T15:45:00",
+		"endDate": "2015-01-09T16:00:00",
+		"text": "",
+		"headline": "Roll Call"
+	},
+	{
+		"startDate": "2015-01-08T08:45:00",
+		"endDate": "2015-01-08T09:00:00",
+		"text": "",
+		"headline": "Roll Call"
+	},
+	{
+		"startDate": "2015-01-09T07:45:00",
+		"endDate": "2015-01-09T08:00:00",
+		"text": "",
+		"headline": "Roll Call"
+	},
+	{
+		"startDate": "2015-01-07T23:00:00Z",
+		"endDate": "2015-01-08T02:00:00Z",
+		"text": "SIT labs",
+		"headline": "Masterclasses"
+	},
+	{
+		"startDate": "2015-01-05T13:45:00",
+		"endDate": "2015-01-05T14:00:00",
+		"text": "",
+		"headline": "Roll Call"
+	},
+	{
+		"startDate": "2015-01-05T08:45:00",
+		"endDate": "2015-01-05T09:00:00",
+		"text": "",
+		"headline": "Roll Call"
+	},
+	{
+		"startDate": "2015-01-10T08:00:00Z",
+		"endDate": "2015-01-10T11:00:00Z",
+		"text": "SIT labs",
+		"headline": "Cryptography Challenge"
+	},
+	{
+		"startDate": "2015-01-11T08:00:00Z",
+		"endDate": "2015-01-11T09:30:00Z",
+		"text": "Front lawn",
+		"headline": "Simulation"
+	},
+	{
+		"startDate": "2015-01-06T08:00:00Z",
+		"endDate": "2015-01-06T11:00:00Z",
+		"text": "Women's car park",
+		"headline": "Treasure Hunt"
+	},
+	{
+		"startDate": "2015-01-05T08:00:00Z",
+		"endDate": "2015-01-05T11:00:00Z",
+		"text": "Menzies",
+		"headline": "Trivia"
+	},
+	{
+		"startDate": "2015-01-04T08:00:00Z",
+		"endDate": "2015-01-04T11:00:00Z",
+		"text": "Menzies",
+		"headline": "Group building activities"
+	}
+]

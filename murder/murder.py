@@ -55,7 +55,7 @@ def lodge(response, game_id=None):
 	response.write(lodge_template(game_id))
 
 def murder_list_template(game_id, murders) -> str:
-	template = templater.load('murder_list.html').generate(game_id=game_id, murders=murders, profile=False)
+	template = templater.load('murders.html').generate(game_id=game_id, murders=murders, profile=False)
 	return inside_page(template, game_id=game_id)
 
 def murder_list(response, game_id=None):
@@ -71,6 +71,14 @@ def murder_map(response, game_id=None):
 	response.write(murder_map_template(game_id, murders))
 
 def murder(response):
+	game_id = response.get_field('game')
+	types = response.request.headers['Accept'].split(';')
+	murders = list(Murder.all_murders(game_id))
+
+	murder_json = json.dumps([murder.__dict__ for murder in murders])
+	response.write(murder_json)
+
+def murder_submit(response):
 	game_id = response.get_field('game')
 
 	murderer = response.get_field('murderer')

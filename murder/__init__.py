@@ -5,7 +5,7 @@ import sqlite3
 from .home import home
 from .game import game, Game
 from .player import player, profiles, profile, Player
-from .murder import murder, lodge, murder_list, murder_map, Murder
+from .murder import murder, murder_submit, lodge, murder_list, murder_map, Murder
 from .stats import stats
 from .admin import admin, login_page, login
 from .achievement import achievements, achievement_progress, Achievement, AchievementProgress
@@ -34,7 +34,7 @@ def init_server():
 	# API pages
 	server.register('/game', game)
 	server.register('/player', player, post=player)
-	server.register('/murder', murder, post=murder)
+	server.register('/murder', murder, post=murder_submit)
 	server.register('/achievement_progress', achievement_progress)
 	server.register('/login', login_page, post=login)
 

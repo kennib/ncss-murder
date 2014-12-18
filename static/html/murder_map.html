@@ -7,6 +7,7 @@
 	<style>
 		#map { height: 240px; }
 	</style>
+	<script src="/static/js/loadMurders.js"></script>
 	<script>
 		var map = L.map('map').setView([-33.889413, 151.190137], 16);
 		L.tileLayer('http://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
@@ -16,12 +17,15 @@
 			minZoom: 13,
 		}).addTo(map);
 		
-		var murders = {% raw json_encode(list(murder.__dict__ for murder in murders)) %};
-		var markers = murders.filter(function(murder) {
-			return murder.lat && murder.lng;
-		}).map(function(murder) {
-			var marker = L.marker([murder.lat, murder.lng]).addTo(map);
-			return marker;
-		});
+		function murderMarkers(murders) {
+			var markers = murders.filter(function(murder) {
+				return murder.lat && murder.lng;
+			}).map(function(murder) {
+				var marker = L.marker([murder.lat, murder.lng]).addTo(map);
+				return marker;
+			});
+		};
+
+		loadMurders({{ game_id }}, murderMarkers);
 	</script>
 </article>
