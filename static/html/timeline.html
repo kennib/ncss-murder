@@ -1,0 +1,32 @@
+<article>
+	<h2>Timeline</h2>
+
+	<div id="timeline"></div>
+	<script type="text/javascript" src="http://cdn.knightlab.com/libs/timeline/latest/js/storyjs-embed.js"></script>
+	<script src="/static/js/loadMurders.js"></script>
+	<script>
+		function createTimeline(murders) {
+			var timeline = {
+				timeline: {
+					type: "default",
+					date: murders.map(function(murder) {
+						return {
+							startDate: murder.datetime,
+							headline: murder.victim + ' Killed by ' + murder.murderer,
+						};
+					}),
+				},
+			};
+
+			createStoryJS({
+				type: 'timeline',
+				width: '100%',
+				height: '600',
+				source: timeline,
+				embed_id: 'timeline'
+			});
+		};
+
+		loadMurders({{ game_id }}, createTimeline);
+	</script>
+</article>
