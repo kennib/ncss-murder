@@ -72,6 +72,14 @@ def murder_map(response, game_id=None):
 
 def murder(response):
 	game_id = response.get_field('game')
+	types = response.request.headers['Accept'].split(';')
+	murders = list(Murder.all_murders(game_id))
+
+	murder_json = json.dumps([murder.__dict__ for murder in murders])
+	response.write(murder_json)
+
+def murder_submit(response):
+	game_id = response.get_field('game')
 
 	murderer = response.get_field('murderer')
 	victim = response.get_field('victim')
