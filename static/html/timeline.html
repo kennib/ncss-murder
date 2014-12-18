@@ -5,6 +5,10 @@
 	<script type="text/javascript" src="http://cdn.knightlab.com/libs/timeline/latest/js/storyjs-embed.js"></script>
 	<script src="/static/js/loadMurders.js"></script>
 	<script>
+		function profile_link(player) {
+			return '<a href="/{{ game_id }}/profiles/'+player.replace(' ', '+')+'">'+player+'</a>'
+		};
+
 		function createTimeline(murders) {
 			var timeline = {
 				timeline: {
@@ -12,7 +16,7 @@
 					date: murders.map(function(murder) {
 						return {
 							startDate: murder.datetime,
-							headline: murder.victim + ' Killed by ' + murder.murderer,
+							headline: profile_link(murder.victim) + ' killed by ' + profile_link(murder.murderer),
 						};
 					}),
 				},
