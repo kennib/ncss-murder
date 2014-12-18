@@ -82,4 +82,7 @@ def murder(response):
 
 	Murder.add(game=game_id, murderer=murderer, victim=victim, datetime=datetime, lat=lat, lng=lng, location=location)
 
+	from .achievement import Achievement
+	Achievement.total_progress(game_id)
+
 	response.redirect('/{}/murders'.format(game_id))

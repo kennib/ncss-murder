@@ -1,4 +1,4 @@
-from .db import Model
+from .db import Model, NonUniqueError
 from .template import templater, inside_page
 
 class Player(Model):
@@ -18,11 +18,19 @@ class Player(Model):
 		
 	def death(self):
 		from .murder import Murder
-		death = Murder.find(victim=self.id)
+		try:
+			death = Murder.find(victim=self.id)
+		except NonUniqueError:
+			death, *_ = Murder.iter(victim=self.id)
+
 		if death:
 			murderer = Player.find(id=death.murderer)
 			death.murderer = murderer
 		return death
+
+	def achievements(self):
+		from .achievement import AchievementProgress
+		return AchievementProgress.find_achievements(player=self.id)
 
 	@classmethod
 	def init_db(cls):
@@ -39,8 +47,8 @@ def profiles_template(game_id, players) -> str:
 	profiles = templater.load('profiles.html').generate(game_id=game_id, profiles=players)
 	return inside_page(profiles, game_id=game_id)
 
-def profile_template(game_id, player, death, murders) -> str:
-	profile = templater.load('profile.html').generate(game_id=game_id, player=player, death=death, murders=murders, profile=True)
+def profile_template(game_id, player, death, murders, achievements) -> str:
+	profile = templater.load('profile.html').generate(game_id=game_id, player=player, death=death, murders=murders, achievements=achievements, profile=True)
 	return inside_page(profile, game_id=game_id)
 
 def profiles(response, game_id=None):
@@ -54,7 +62,8 @@ def profile(response, game_id=None, player_id=None):
 	player = Player.find(game=game_id, name=player_id.replace('+', ' '))
 	death = player.death()
 	murders = player.murders()
-	template = profile_template(game_id, player, death, murders)
+	achievements = player.achievements()
+	template = profile_template(game_id, player, death, murders, achievements)
 	response.write(template)
 
 def player(response):
@@ -73,5 +82,8 @@ def player(response):
 
 	for player in players:
 		Player.add(**player)
+
+	from .achievement import Achievement
+	Achievement.total_progress(game_id)
 
 	response.redirect('/{}/profiles'.format(game_id))

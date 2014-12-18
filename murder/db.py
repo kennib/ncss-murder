@@ -2,6 +2,12 @@ import sqlite3
 
 from tornado.ncss import ncssbook_log
 
+class DoesNotExistError(LookupError):
+    pass
+
+class NonUniqueError(LookupError):
+    pass
+
 class Model(object):
 	_conn = sqlite3.connect('ncssmurder.db', isolation_level=None)
 	_table = None
@@ -93,6 +99,14 @@ class Model(object):
 		return inst
 
 	@classmethod
+	def find_or_create(cls, **kwargs):
+		try:
+			return cls.get(**kwargs)
+		except DoesNotExistError:
+			cls.add(**kwargs)
+			return cls.get(**kwargs)
+
+	@classmethod
 	def get(cls, **kwargs):
 		"""get(**kwargs) -> instance
 
@@ -101,3 +115,4 @@ class Model(object):
 		inst = cls.find(**kwargs)
 		if inst is None:
 			raise DoesNotExistError("instance {} does not exist in {}".format(kwargs, cls._table))
+		return inst

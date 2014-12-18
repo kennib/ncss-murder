@@ -286,3 +286,65 @@ button:active {
 	box-shadow: inset 2px 2px 0px rgba(0,0,0, 0.4);
 	outline: none;
 }
+
+/* Achievements */
+ul.achievements {
+	list-style-type: none;
+	padding: 10px;
+}
+
+ul.achievements > li {
+	display: inline-block;
+	box-sizing: border-box;
+	width: 200px;
+	height: 200px;
+	margin: 5px;
+	padding: 5px;
+
+	vertical-align: bottom;
+	text-align: center;
+
+	background-color: #efefef;
+}
+
+ul.achievements > li.complete {
+	color: white;
+	background-color: #ad213a;
+}
+
+ul.achievements > li .points {
+	float: right;
+	min-width: 15px;
+	margin: 5px;
+	padding: 5px;
+
+	text-align: center;
+	font-weight: bold;
+
+	color: #ad213a;
+	background-color: white;
+	border-radius: 20px;;
+}
+
+/* Progress bar */
+.progress-bar {
+	display: block;
+	box-sizing: border-box;
+	margin: 5px;
+	padding: 5px;
+	height: 15px;
+
+	text-align: left;
+	line-height: 0px;
+
+	background-color: white;
+	border-radius: 10px;
+}
+
+.progress {
+	display: inline-block;
+	height: 5px;
+
+	background-color: #ad213a;
+	border-radius: 10px;
+}

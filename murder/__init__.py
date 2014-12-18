@@ -8,13 +8,18 @@ from .player import player, profiles, profile, Player
 from .murder import murder, lodge, murder_list, murder_map, Murder
 from .stats import stats
 from .admin import admin, login_page, login
+from .achievement import achievements, achievement_progress, Achievement, AchievementProgress
 
 def init_db(database=None):
-	tables = [Game, Player, Murder]
+	# Create a custom database connection
+	if database:
+		conn = sqlite3.connect(database, isolation_level=None)
+
+	tables = [Game, Player, Murder, Achievement, AchievementProgress]
 	for table in tables:
 		# Set the database connection
 		if database:
-			table._conn = sqlite3.connect(database, isolation_level=None)
+			table._conn = conn
 
 		# Initialise the database tables
 		try:
@@ -30,6 +35,7 @@ def init_server():
 	server.register('/game', game)
 	server.register('/player', player, post=player)
 	server.register('/murder', murder, post=murder)
+	server.register('/achievement_progress', achievement_progress)
 	server.register('/login', login_page, post=login)
 
 	# HTML pages
@@ -43,6 +49,7 @@ def init_server():
 	server.register('{}/map/?'.format(game_id), murder_map)
 	server.register('{}/murders/?'.format(game_id), murder_list)
 	server.register('{}/stats/?'.format(game_id), stats)
+	server.register('{}/achievements/?'.format(game_id), achievements)
 	server.register('{}?/?'.format(game_id), home)	
 
 	return server
