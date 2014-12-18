@@ -4,12 +4,13 @@
 	<div id="timeline"></div>
 	<script type="text/javascript" src="http://cdn.knightlab.com/libs/timeline/latest/js/storyjs-embed.js"></script>
 	<script src="/static/js/loadMurders.js"></script>
+	<script src="/static/js/loadSchedule.js"></script>
 	<script>
 		function profile_link(player) {
 			return '<a href="/{{ game_id }}/profiles/'+player.replace(' ', '+')+'">'+player+'</a>'
 		};
 
-		function createTimeline(murders) {
+		function createTimeline(murders, schedule) {
 			var timeline = {
 				timeline: {
 					type: "default",
@@ -19,6 +20,7 @@
 							headline: profile_link(murder.victim) + ' killed by ' + profile_link(murder.murderer),
 						};
 					}),
+					era: schedule,
 				},
 			};
 
@@ -31,6 +33,10 @@
 			});
 		};
 
-		loadMurders({{ game_id }}, createTimeline);
+		loadSchedule({{ game_id }}, function(schedule) {
+			loadMurders({{ game_id }}, function(murders) {
+				createTimeline(murders, schedule);
+			});
+		});
 	</script>
 </article>
