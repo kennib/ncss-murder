@@ -25,6 +25,14 @@
 					&nbsp;
 				{% end %}
 			</small>
+			{% else %}
+			<small>
+				{% if achievement.holders == 1 %}
+					{{ achievement.holders }} person has this achievement
+				{% else %}
+					{{ achievement.holders }} people have this achievement
+				{% end %}
+			</small>
 			{% end %}
 			<p>
 				{{ achievement.description }}

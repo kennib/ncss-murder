@@ -21,6 +21,22 @@ class Achievement(Model):
 	def calculate_progress(self, game):
 		pass
 
+	def holders(self):
+		HOLDERS = """SELECT COUNT(*)
+		FROM (SELECT pa.id
+			FROM achievement AS a
+			LEFT JOIN achievement_progress AS pa ON a.id = pa.achievement
+			WHERE a.id = ?
+			GROUP BY pa.player
+			HAVING pa.progress = a.goal
+				AND (pa.id = max(pa.id) OR pa.id IS NULL)
+			)
+		"""
+		c = self._sql(HOLDERS, (self.id,))
+		holders, = c.fetchone()
+		return holders
+		
+
 	@classmethod
 	def total_progress(cls, game):
 		for achievement in Achievement.achievements:
@@ -176,6 +192,8 @@ def achievements_template(game_id, achievements) -> str:
 
 def achievements(response, game_id=None):
 	achievements = list(Achievement.iter())
+	for achievement in achievements:
+		achievement.holders = achievement.holders()
 	response.write(achievements_template(game_id, achievements))
 
 def achievement_progress(response):
