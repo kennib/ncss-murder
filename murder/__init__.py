@@ -28,8 +28,8 @@ def init_db(database=None):
 			log.info("Error creating tables: {}".format(e))
 	
 
-def init_server():
-	server = Server()
+def init_server(**kwargs):
+	server = Server(**kwargs)
 
 	# API pages
 	server.register('/game', game)
