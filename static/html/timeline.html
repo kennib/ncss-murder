@@ -36,15 +36,24 @@
 			var timeline = {
 				timeline: {
 					type: "default",
-					date: murders.map(function(murder) {
-						return {
-							startDate: murder.datetime,
-							headline: profile_link(murder.victim) + ' killed by ' + profile_link(murder.murderer),
-						};
-					}),
 					era: schedule,
 				},
 			};
+
+			var murderDates = murders.map(function(murder) {
+				return {
+					startDate: murder.datetime,
+					headline: profile_link(murder.victim) + ' killed by ' + profile_link(murder.murderer),
+				};
+			});
+
+			if (murderDates && murderDates.length > 0)
+				timeline.timeline.date = (murderDates);
+			else
+				timeline.timeline.date = [{
+					startDate: new Date(),
+					headline: 'No Murders yet',
+				}];
 
 			createStoryJS({
 				type: 'timeline',
