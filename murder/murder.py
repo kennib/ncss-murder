@@ -89,6 +89,13 @@ def murder_submit(response):
 	datetime = response.get_field('datetime')
 	location = response.get_field('location')
 
+	location_name = response.get_field('location_name')
+	if location_name:
+		lat = response.get_field('lat')
+		lng = response.get_field('lng')
+		loc = Location.add(id=None, name=location_name, lat=lat, lng=lng)
+		location = loc.id
+
 	Murder.add(game=game_id, murderer=murderer, victim=victim, datetime=datetime, location=location)
 
 	from .achievement import Achievement

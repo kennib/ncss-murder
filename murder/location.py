@@ -4,7 +4,6 @@ class Location(Model):
 	_table = 'location'
 
 	def __init__(self, id, name, lat, lng):
-		super(Location, self).__init__()
 		self.id, self.name, self.lat, self.lng = id, name, lat, lng
 
 	@classmethod
