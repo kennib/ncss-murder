@@ -6,8 +6,17 @@
 		<input type="hidden" name="game" value="{{ game_id if game_id else '' }}"></input>
 
 		<fieldset>
-			<label for="password">Password</label>
-			<input type="password" name="password" autofocus></input>
+			<p>
+				<label for="user">Username</label>
+				<input name="user" autofocus></input>
+			</p>
+
+			<p>
+				<label for="password">Password</label>
+				<input type="password" name="password"></input>
+			</p>
+
+			<input type="submit" value="Login"></input>
 		</fieldset>
 	</form>
 </article>

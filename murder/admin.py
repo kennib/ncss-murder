@@ -1,6 +1,40 @@
+from hashlib import sha256
+
+from .db import Model
 from .player import Player
 from .location import Location
 from .template import templater, inside_page
+
+class Admin(Model):
+	_table = 'admin'
+
+	def __init__(id, name, password):
+		self.name = name
+		self.password = sha256(password.encode('utf-8')).hexdigest()
+
+	@classmethod
+	def login(cls, user, password):
+		LOGIN = """SELECT * from {}
+			WHERE name = ? AND password = ?
+		""".format(cls._table)
+		
+		hash = sha256(password.encode('utf-8')).hexdigest()
+		c = cls._sql(LOGIN, (user, hash))
+
+		if c.fetchone():
+			return True
+		else:
+			return False
+
+	@classmethod
+	def init_db(cls):
+		CREATE = """CREATE table {} (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT(40) NOT NULL,
+			password TEXT(256) NOT NULL,
+			UNIQUE (name)
+		)""".format(cls._table)
+		cls._sql(CREATE)
 
 def admin_template(game_id, players=None, locations=None) -> str:
 	admin = templater.load('admin.html').generate(game_id=game_id, players=players, locations=locations)
@@ -28,9 +62,10 @@ def login_page(response):
 
 def login(response):
 	game_id = response.get_field('game')
+	user = response.get_field('user')
 	password = response.get_field('password')
 
-	correct_password = password == 'NCSS'
+	correct_password = Admin.login(user, password)
 
 	if correct_password:
 		response.set_secure_cookie('loggedin', str(True))
