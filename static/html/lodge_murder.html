@@ -40,35 +40,26 @@
 			<p>
 				<label for="location">Location</label>
 				<select name="location" onchange="setLocation(this)">
-					<option value="">Select a location</option>
-					<option>SIT</option>
-					<option>Women's College</option>
+					<option disabled selected value="">Select a location</option>
+				{% for location in locations %}
+					<option value="{{ location.id }}">{{ location.name }}</option>
+				{% end %}
 				</select>
 			</p>
-			<p>
-				<input type="hidden" name="lat"></input>
-				<input type="hidden" name="lng"></input>
-			</p>
 		</fieldset>
+
+		<fieldset>
+			Add a new location below or
+			<input type="submit" value="Lodge Murder"></input>
+		</fieldset>
+
+		{% include add_location.html %}
 
 		<fieldset>
 			<input type="submit" value="Lodge Murder"></input>
 		</fieldset>
 	</form>
 	
-	<script>
-		var latLngs = {
-			'SIT': {lat: -33.888216, lng: 151.194132},
-			'Women\'s College': {lat: -33.890763, lng: 151.186772},
-		};
-		
-		function setLocation(select) {
-			var form = select.form;
-			var location = select.value;
-			form.lat.value = latLngs[location].lat;
-			form.lng.value = latLngs[location].lng;
-		}
-	</script>
 	<script>
 		var d = new Date();
 		var now = d.toISOString().slice(0, 11) + d.getHours() + ':' + d.getMinutes();

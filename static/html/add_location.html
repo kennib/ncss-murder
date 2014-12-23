@@ -1,0 +1,43 @@
+<article>
+	<h2>Add a new location</h2>
+	<fieldset>
+		<p>
+			<label for="location_name">Name</label>
+			<input name="location_name"></input>
+		</p>
+
+		<p>
+			<input type="hidden" name="lat"></input>
+			<input type="hidden" name="lng"></input>
+			<div id="map"></div>
+		</p>
+	</fieldset>
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+	<style>
+		#map { height: 240px; }
+	</style>
+	<script>
+		var nameInput = document.querySelector('input[name=location_name]');
+		var form = nameInput.form;
+		var loc = [-33.889413, 151.190137];
+		var map = L.map('map').setView(loc, 16);
+		L.tileLayer('http://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			id: 'kennib.k70hhmpn',
+			maxZoom: 18,
+			minZoom: 13,
+		}).addTo(map);
+		
+		var marker = L.marker(loc, {draggable: true})
+			.addTo(map);
+
+		marker.on("dragend",function(event){
+            var latLng = event.target.getLatLng();
+			nameInput.setAttribute('required', true);
+			form.lat.value = latLng.lat;
+			form.lng.value = latLng.lng;
+        });	
+	</script>
+</article>

@@ -10,10 +10,7 @@ class Player(Model):
 
 	def murders(self):
 		from .murder import Murder
-		murders = list(Murder.iter(murderer=self.id))
-		for murder in murders:
-			victim = Player.find(id=murder.victim)
-			murder.victim = victim.name
+		murders = list(Murder.all_murders(murderer=self.id))
 		return murders
 		
 	def death(self):

@@ -2,29 +2,40 @@ import json
 
 from .db import Model
 from .player import Player
+from .location import Location
 from .template import templater, inside_page
 
 class Murder(Model):
 	_table='murder'
 
-	def __init__(self, id, game, murderer, victim, datetime, lat, lng, location):
-		self.id, self.game, self.murderer, self.victim, self.datetime, self.lat, self.lng, self.location = id, game, murderer, victim, datetime, lat, lng, location
+	def __init__(self, id, game, murderer, victim, datetime, location, lat=None, lng=None):
+		self.id, self.game, self.murderer, self.victim, self.datetime, self.location = id, game, murderer, victim, datetime, location
+		self.lat, self.lng = lat, lng
 
 	@classmethod
-	def all_murders(cls, game):
+	def all_murders(cls, game=None, murderer=None):
 		MURDERS = """SELECT murder.id, murder.game,
 							murderer.name, victim.name,
 							murder.datetime,
-							murder.lat, murder.lng, murder.location
+							location.name, location.lat, location.lng
 			FROM murder
 			LEFT JOIN player AS murderer
 				ON murderer.id = murder.murderer
 			LEFT JOIN player AS victim
 				ON victim.id = murder.victim
-			WHERE murder.game = ?
+			LEFT JOIN location
+				ON murder.location = location.id
 		"""
+		
+		if game != None:
+			MURDERS += "WHERE murder.game = ?"
+			c = cls._sql(MURDERS, (game,))
+		elif murderer != None:
+			MURDERS += "WHERE murder.murderer = ?"
+			c = cls._sql(MURDERS, (murderer,))
+		else:
+			c = cls._sql(MURDERS)
 
-		c = cls._sql(MURDERS, game)
 		row = c.fetchone()
 		while row is not None:
 			yield cls(*row)
@@ -38,21 +49,20 @@ class Murder(Model):
 			murderer INTEGER NOT NULL references player (id),
 			victim INTEGER NOT NULL references player (id),
 			datetime DATETIME NOT NULL,
-			lat DECIMAL(9,6),
-			lng DECIMAL(9,6),
-			location TEXT(50),
+			location INTEGER references location(id),
 			UNIQUE (murderer, victim)
 		)"""
 		cls._sql(CREATE)
 
-def lodge_template(game_id) -> str:
-	player_query = Player.select(game=game_id)
-	players = [{'id': id, 'name': name, 'type': type} for id, game, name, type in player_query]
-	lodge = templater.load('lodge_murder.html').generate(game_id=game_id, players=players)
+def lodge_template(game_id, players, locations) -> str:
+	lodge = templater.load('lodge_murder.html').generate(game_id=game_id, players=players, locations=locations)
 	return inside_page(lodge, game_id=game_id)
 
 def lodge(response, game_id=None):
-	response.write(lodge_template(game_id))
+	player_query = Player.select(game=game_id)
+	players = [{'id': id, 'name': name, 'type': type} for id, game, name, type in player_query]
+	locations = list(Location.iter())
+	response.write(lodge_template(game_id, players, locations))
 
 def murder_list_template(game_id, murders) -> str:
 	template = templater.load('murders.html').generate(game_id=game_id, murders=murders, profile=False)
@@ -84,11 +94,16 @@ def murder_submit(response):
 	murderer = response.get_field('murderer')
 	victim = response.get_field('victim')
 	datetime = response.get_field('datetime')
-	lat = response.get_field('lat')
-	lng = response.get_field('lng')
 	location = response.get_field('location')
 
-	Murder.add(game=game_id, murderer=murderer, victim=victim, datetime=datetime, lat=lat, lng=lng, location=location)
+	location_name = response.get_field('location_name')
+	if location_name:
+		lat = response.get_field('lat')
+		lng = response.get_field('lng')
+		loc = Location.add(id=None, name=location_name, lat=lat, lng=lng)
+		location = loc.id
+
+	Murder.add(game=game_id, murderer=murderer, victim=victim, datetime=datetime, location=location)
 
 	from .achievement import Achievement
 	Achievement.total_progress(game_id)
