@@ -16,12 +16,17 @@
 			maxZoom: 18,
 			minZoom: 13,
 		}).addTo(map);
+
+		function murderPopupText(murder) {
+			return '<b>' + murder.murderer + ' murdered ' + murder.victim + '</b><br>' + murder.datetime.replace('T', ', ');
+		}
 		
 		function murderMarkers(murders) {
 			var markers = murders.filter(function(murder) {
 				return murder.lat && murder.lng;
 			}).map(function(murder) {
-				var marker = L.marker([murder.lat, murder.lng]).addTo(map);
+				var marker = L.marker([murder.lat, murder.lng]).addTo(map)
+					.bindPopup(murderPopupText(murder));
 				return marker;
 			});
 		};
