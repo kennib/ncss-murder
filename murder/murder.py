@@ -13,7 +13,7 @@ class Murder(Model):
 		self.lat, self.lng = lat, lng
 
 	@classmethod
-	def all_murders(cls, game):
+	def all_murders(cls, game=None, murderer=None):
 		MURDERS = """SELECT murder.id, murder.game,
 							murderer.name, victim.name,
 							murder.datetime,
@@ -25,10 +25,17 @@ class Murder(Model):
 				ON victim.id = murder.victim
 			LEFT JOIN location
 				ON murder.location = location.id
-			WHERE murder.game = ?
 		"""
+		
+		if game != None:
+			MURDERS += "WHERE murder.game = ?"
+			c = cls._sql(MURDERS, (game,))
+		elif murderer != None:
+			MURDERS += "WHERE murder.murderer = ?"
+			c = cls._sql(MURDERS, (murderer,))
+		else:
+			c = cls._sql(MURDERS)
 
-		c = cls._sql(MURDERS, game)
 		row = c.fetchone()
 		while row is not None:
 			yield cls(*row)
