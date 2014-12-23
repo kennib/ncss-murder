@@ -1,8 +1,9 @@
 from .player import Player
+from .location import Location
 from .template import templater, inside_page
 
-def admin_template(game_id, players=None) -> str:
-	admin = templater.load('admin.html').generate(game_id=game_id, players=players)
+def admin_template(game_id, players=None, locations=None) -> str:
+	admin = templater.load('admin.html').generate(game_id=game_id, players=players, locations=locations)
 	return inside_page(admin, game_id=game_id)
 
 def admin(response, game_id=None):
@@ -11,7 +12,8 @@ def admin(response, game_id=None):
 	if loggedin:
 		player_query = Player.select(game=game_id)
 		players = [{'id': id, 'name': name, 'type': type} for id, game, name, type in player_query]
-		response.write(admin_template(game_id, players))
+		locations = list(Location.iter())
+		response.write(admin_template(game_id, players, locations))
 	else:
 		response.redirect('/login?game={}'.format(game_id) if game_id != None else '/login')
 

@@ -5,6 +5,7 @@ import sqlite3
 from .home import home
 from .game import game, Game
 from .player import player, profiles, profile, Player
+from .location import Location
 from .murder import murder, murder_submit, lodge, murder_list, murder_map, Murder
 from .stats import stats
 from .admin import admin, login_page, login
@@ -15,7 +16,7 @@ def init_db(database=None):
 	if database:
 		conn = sqlite3.connect(database, isolation_level=None)
 
-	tables = [Game, Player, Murder, Achievement, AchievementProgress]
+	tables = [Game, Player, Murder, Achievement, AchievementProgress, Location]
 	for table in tables:
 		# Set the database connection
 		if database:
