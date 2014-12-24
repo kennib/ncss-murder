@@ -1,4 +1,8 @@
 <article>
+	<script src="/static/js/lib/jquery.min.js"></script>
+	<script src="/static/js/lib/jquery.dynatable.js"></script>
+	<link rel="stylesheet" href="/static/css/lib/jquery.dynatable.css" />
+
 	<table>
 		<thead>
 			<tr>
@@ -21,4 +25,19 @@
 		{% end %}
 		</tbody>
 	</table>
+	<script>
+		$.dynatableSetup({
+			features: {
+				paginate: false,
+				sort: true,
+				pushState: false,
+				search: false,
+				recordCount: false,
+				perPageSelect: false
+			}
+		});
+		$(document).ready(function() {
+			$('table').dynatable();
+		});
+	</script>
 </article>
