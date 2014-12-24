@@ -51,8 +51,45 @@
 		var diagonal = d3.svg.diagonal()
 			.projection(function(d) { return [d.y, d.x]; });
 
-		d3.json("https://gist.githubusercontent.com/mbostock/1093025/raw/a05a94858375bd0ae023f6950a2b13fac5127637/flare.json", function(json) {
-			root = json;
+		d3.json('/murder?game={{ game_id }}', function(murders) {
+			// Create the root of the tree
+			var murderTree = {
+				name: 'Alive',
+			};
+			
+			// Get a map of players
+			var murderers = murders.map(function(murder) {
+				return {name: murder.murderer};
+			});
+			var victims = murders.map(function(murder) {
+				return {name: murder.victim};
+			});
+			var playerMap = d3.map(murderers.concat(victims), function(player) {
+				return player.name;
+			});
+			var players = playerMap.values();
+
+			// Construct the tree of murders
+			murders.forEach(function(murder) {
+				var murderer = playerMap.get(murder.murderer);
+				var victim = playerMap.get(murder.victim);
+
+				// Add victim to murderer's children
+				if (murderer.children === undefined)
+					murderer.children = [];
+				murderer.children.push(victim);
+
+				victim.dead = true;
+			});
+			
+			// Get alive players
+			murderTree.children = players.filter(function(player) {
+				return !player.dead;
+			})
+
+			console.log(murderTree);
+
+			root = murderTree;
 			root.x0 = h / 2;
 			root.y0 = 0;
 
@@ -62,13 +99,6 @@
 					toggle(d);
 				}
 			}
-
-			// Initialize the display to show a few nodes.
-			root.children.forEach(toggleAll);
-			toggle(root.children[1]);
-			toggle(root.children[1].children[2]);
-			toggle(root.children[9]);
-			toggle(root.children[9].children[0]);
 
 			update(root);
 		});
