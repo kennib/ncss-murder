@@ -62,7 +62,7 @@
 	
 	<script>
 		var d = new Date();
-		var now = d.toISOString().slice(0, 11) + d.getHours() + ':' + d.getMinutes();
+		var now = d.toISOString().slice(0, 11) + d.getHours() + ':' + (d.getMinutes() >= 10 ? d.getMinutes() : '0'+d.getMinutes());
 		var datetime = document.querySelector('input[type=datetime-local]');
 		datetime.value = now;
 	</script>
