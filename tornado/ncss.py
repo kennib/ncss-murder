@@ -131,14 +131,16 @@ class Server:
         url_spec = tornado.web.URLSpec(url_pattern, h, name=url_name)
         self.handlers.append(url_spec)
 
-    def app(self):
+    def app(self, **kwargs):
         # Randomise the cookie secret upon reload.
-        m = hashlib.md5()
-        m.update((str(random.random()) + str(random.random())).encode('utf-8'))
-        cookie_secret = m.digest()
+        if 'cookie_secret' not in kwargs:
+            m = hashlib.md5()
+            m.update((str(random.random()) + str(random.random())).encode('utf-8'))
+            cookie_secret = m.digest()
+            kwargs['cookie_secret'] = cookie_secret
 
         # Create the app in debug mode (autoreload)
-        app = tornado.web.Application(self.handlers, static_path=self.static_path, cookie_secret=cookie_secret, debug=True)
+        app = tornado.web.Application(self.handlers, static_path=self.static_path, debug=True, **kwargs)
         return app
 
     def loop(self):
