@@ -131,10 +131,18 @@ def disable(response):
 def disableable(handler):
 	def disableable_handler(response, game_id=None, *args):
 		if game_id is None:
-			game_id, year, number = Game.latest()
-		game = Game.get(id=game_id)
+			latest = Game.latest()
+			if latest is not None:
+				game_id, year, number = latest 
+			else:
+				game_id = None
 
-		disabled = is_disabled(game.disabled)
+		if game_id is not None:
+			game = Game.get(id=game_id)
+			disabled = is_disabled(game.disabled)
+		else:
+			disabled = False
+
 		loggedin = response.get_secure_cookie('loggedin')
 		
 		if disabled and not loggedin:
