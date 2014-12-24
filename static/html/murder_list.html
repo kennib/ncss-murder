@@ -1,4 +1,8 @@
 <article>
+	<script src="/static/js/lib/jquery.min.js"></script>
+	<script src="/static/js/lib/jquery.dynatable.js"></script>
+	<link rel="stylesheet" href="/static/css/lib/jquery.dynatable.css" />
+	
 	<h2>Murders</h2>
 
 {% if murders %}
@@ -34,4 +38,19 @@
 		<p>There are no murders... yet.</p>
 	{% end %}
 {% end %}
+	<script>
+		$.dynatableSetup({
+			features: {
+				paginate: false,
+				sort: true,
+				pushState: false,
+				search: false,
+				recordCount: false,
+				perPageSelect: false
+			}
+		});
+		$(document).ready(function() {
+			$('table').dynatable();
+		});
+	</script>
 </article>
