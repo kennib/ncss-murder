@@ -1,0 +1,27 @@
+<article>
+	<h2>Disable Website</h2>	
+
+	<form method="POST" action="/disable" id="disable">
+		<input type="hidden" name="game" value="{{ game_id }}"></input>
+		
+		<fieldset>
+			<p>
+				<label for="disable_true">Disable</label>
+				<input type="radio" name="disable" value="True" id="disable_true">
+				<label for="disable_false">Enable</label>
+				<input type="radio" name="disable" value="False" id="disable_false">
+			</p>
+		</fieldset>
+	</form>
+
+	<script>
+		var form = document.querySelector('form#disable');
+		form.onchange = function() {
+			var data = new FormData(form);
+
+			var req = new XMLHttpRequest();
+			req.open(form.method, form.action);
+			req.send(data);
+		};
+	</script>
+</article>
