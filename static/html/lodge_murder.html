@@ -39,7 +39,7 @@
 		<fieldset>
 			<p>
 				<label for="location">Location</label>
-				<select name="location" onchange="setLocation(this)">
+				<select name="location">
 					<option disabled selected value="">Select a location</option>
 				{% for location in locations %}
 					<option value="{{ location.id }}">{{ location.name }}</option>
