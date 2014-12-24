@@ -20,6 +20,19 @@ class HTTPTestCase(AsyncHTTPTestCase):
 		response = self.fetch(url, **kwargs)
 		if response.error:
 			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
+
+		url = '/signup'
+		kwargs = {'method': 'GET'}
+		response = self.fetch(url, **kwargs)
+		if response.error:
+			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
+		
+		url = '/signup'
+		kwargs = {'method': 'POST', 'body': b'game=&user=&password=NCSS', 'headers': {'Cache-Control': 'no-cache', 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.65 Safari/537.36', 'Origin': 'http://localhost:8888', 'Referer': 'http://localhost:8888/signup', 'Connection': 'keep-alive', 'Content-Length': '25', 'Cookie': '_ga=GA1.1.350120715.1414625060; loggedin="VHJ1ZQ==|1419381744|961fd90ad157f5d0b3e2119d8149b1c1a6f80a00"', 'Host': 'localhost:8888', 'Accept-Encoding': 'gzip, deflate', 'Pragma': 'no-cache', 'Accept-Language': 'en-GB,en-US;q=0.8,en;q=0.6', 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}}
+		response = self.fetch(url, **kwargs)
+		if response.error:
+			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
+
 		
 		url = '/login'
 		kwargs = {'method': 'GET'}
@@ -28,7 +41,7 @@ class HTTPTestCase(AsyncHTTPTestCase):
 			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
 		
 		url = '/login'
-		kwargs = {'body': b'game=&password=NCSS', 'headers': {'Referer': 'http://localhost:8888/login', 'Connection': 'keep-alive', 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate', 'Content-Length': '19', 'Accept-Language': 'en-GB,en-US;q=0.8,en;q=0.6', 'Cookie': '_ga=GA1.1.350120715.1414625060; loggedin="VHJ1ZQ==|1418801108|4c1b46d2508234a789946d9f8aa83e5d90f4b822"', 'Host': 'localhost:8888', 'Origin': 'http://localhost:8888', 'Cache-Control': 'max-age=0', 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.65 Safari/537.36'}, 'method': 'POST'}
+		kwargs = {'body': b'game=&user=&password=NCSS', 'headers': {'Referer': 'http://localhost:8888/login', 'Connection': 'keep-alive', 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8', 'Accept-Encoding': 'gzip, deflate', 'Content-Length': '19', 'Accept-Language': 'en-GB,en-US;q=0.8,en;q=0.6', 'Cookie': '_ga=GA1.1.350120715.1414625060; loggedin="VHJ1ZQ==|1418801108|4c1b46d2508234a789946d9f8aa83e5d90f4b822"', 'Host': 'localhost:8888', 'Origin': 'http://localhost:8888', 'Cache-Control': 'max-age=0', 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.65 Safari/537.36'}, 'method': 'POST'}
 		response = self.fetch(url, **kwargs)
 		if response.error:
 			raise Exception('{}: {} {} {}'.format(response.error, response.code, response.request.method, response.request.url))
