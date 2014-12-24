@@ -4,14 +4,10 @@
 	<form method="POST" action="/disable" id="disable">
 		<input type="hidden" name="game" value="{{ game_id }}"></input>
 		
-		<fieldset>
-			<p>
-				<label for="disable_true">Disable</label>
-				<input type="radio" name="disable" value="True" id="disable_true">
-				<label for="disable_false">Enable</label>
-				<input type="radio" name="disable" value="False" id="disable_false">
-			</p>
-		</fieldset>
+			<input type="radio" name="disable" value="True" id="disable_true">
+			<label for="disable_true">Disable</label>
+			<input type="radio" name="disable" value="False" id="disable_false">
+			<label for="disable_false">Enable</label>
 	</form>
 
 	<script>

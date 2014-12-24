@@ -237,7 +237,7 @@ form fieldset label {
 }
 
 form fieldset select,
-form fieldset input:not([type=submit]) {
+form fieldset input:not([type=submit]):not([type=radio]) {
 	display: block;
 	width: 100%;
 
@@ -251,7 +251,7 @@ form fieldset input:not([type=submit]) {
 	}
 
 	form fieldset select,
-	form fieldset input:not([type=submit]) {
+	form fieldset input:not([type=submit]):not([type=radio]) {
 		display: inline-block;
 		box-sizing: border-box;
 		width: 55%;
