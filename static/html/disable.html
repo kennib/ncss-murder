@@ -11,9 +11,9 @@
 	</form>
 
 	<script>
-		var form = document.querySelector('form#disable');
-		form.onchange = function() {
-			var data = new FormData(form);
+		var disableForm = document.querySelector('form#disable');
+		disableForm.onchange = function() {
+			var data = new FormData(disableForm);
 
 			var req = new XMLHttpRequest();
 			req.open(form.method, form.action);
