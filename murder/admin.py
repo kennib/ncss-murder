@@ -71,6 +71,10 @@ def login_template(game_id, failed=False) -> str:
 	login = templater.load('login.html').generate(game_id=game_id, failed=failed)
 	return inside_page(login, game_id=game_id)
 
+def disabled_template(game_id) -> str:
+	disabled = templater.load('disabled.html').generate(game_id=game_id)
+	return inside_page(disabled, game_id=game_id)
+
 def signup_page(response):
 	game_id = response.get_field('game')
 	failed = response.get_field('failed')
@@ -146,7 +150,7 @@ def disableable(handler):
 		loggedin = response.get_secure_cookie('loggedin')
 		
 		if disabled and not loggedin:
-			response.write('Sorry not now!')
+			response.write(disabled_template(game_id))
 		elif game_id != None:
 			handler(response, game_id, *args)
 		else:
