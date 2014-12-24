@@ -1,6 +1,7 @@
 from hashlib import sha256
 
 from .db import Model
+from .game import Game
 from .player import Player
 from .location import Location
 from .template import templater, inside_page
@@ -106,3 +107,41 @@ def login(response):
 		response.redirect('{}/admin'.format('/'+game_id if game_id else ''))
 	else:
 		response.redirect('/login?game={}&failed=true'.format(game_id) if game_id != None else '/login')
+
+def is_disabled(disable):
+	if str(disable).lower() in ['true', '1']:
+		disabled = True
+	elif str(disable).lower() in ['false', '0']:
+		disabled = False
+	else:
+		disabled = None
+
+	return disabled
+	
+def disable(response):
+	game_id = response.get_field('game')
+	disable = response.get_field('disable')
+
+	disabled = is_disabled(disable)
+
+	if game_id != None or game_id != '' and disable != None:
+		game = Game.get(id=game_id)
+		game.update(disabled=disabled)
+
+def disableable(handler):
+	def disableable_handler(response, game_id=None, *args):
+		if game_id is None:
+			game_id, year, number = Game.latest()
+		game = Game.get(id=game_id)
+
+		disabled = is_disabled(game.disabled)
+		loggedin = response.get_secure_cookie('loggedin')
+		
+		if disabled and not loggedin:
+			response.write('Sorry not now!')
+		elif game_id != None:
+			handler(response, game_id, *args)
+		else:
+			handler(response, *args)
+
+	return disableable_handler
