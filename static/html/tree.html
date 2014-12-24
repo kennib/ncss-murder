@@ -17,6 +17,10 @@
 			stroke-width: 1.5px;
 		}
 
+		.node circle.closed {
+			fill:  #ad213a;
+		}
+
 		.node text {
 			font-size: 14px;
 		}
@@ -124,7 +128,7 @@
 
 			nodeEnter.append("svg:circle")
 				.attr("r", 1e-6)
-				.style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+				.classed("closed", function(d) { return d._children; });
 
 			nodeEnter.append("svg:text")
 				.attr("x", function(d) { return d.children || d._children ? -10 : 10; })
@@ -140,7 +144,7 @@
 
 			nodeUpdate.select("circle")
 				.attr("r", 4.5)
-				.style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+				.attr('class', function(d) { return d._children ? 'closed' : ''; });
 
 			nodeUpdate.select("text")
 				.style("fill-opacity", 1);
