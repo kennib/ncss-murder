@@ -10,6 +10,10 @@
 			height: 400px;
 		}
 
+		.pan-zoom {
+			cursor: move;
+		}
+
 		.node circle {
 			cursor: pointer;
 			fill: #fff;
@@ -44,11 +48,27 @@
 			i = 0,
 			root;
 
-		var vis = svg.append("svg:g")
-			.attr("width", w)
-			.attr("height", h)
-			.attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+		// Contains zoomable vis
+		var zoomable = svg.append('svg:g')
+			.call(d3.behavior.zoom().scaleExtent([1, 8]).on('zoom', zoom));
 		
+		// Contains visualisation
+		var vis = zoomable.append('svg:g')
+			.attr('width', w)
+			.attr('height', h)
+			.attr('transform', 'translate(' + m[3] + ',' + m[0] + ')');
+
+		// Detects zooming/panning
+		vis.append('svg:rect')
+			.attr('class', 'pan-zoom')
+			.attr('fill-opacity', 0)
+			.attr('width', svg.node().offsetWidth)
+			.attr('height', svg.node().offsetHeight);
+			
+		function zoom() {
+		  vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+		};
+
 		var tree = d3.layout.tree()
 			.size([h, w]);
 
