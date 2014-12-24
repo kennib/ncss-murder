@@ -1,0 +1,22 @@
+<article>
+	{% if failed %}
+	<p>Sorry, you have to be an admin to signup another admin.</p>
+	{% end %}
+	<form method="POST">
+		<input type="hidden" name="game" value="{{ game_id if game_id else '' }}"></input>
+
+		<fieldset>
+			<p>
+				<label for="user">Username</label>
+				<input name="user" autofocus></input>
+			</p>
+
+			<p>
+				<label for="password">Password</label>
+				<input type="password" name="password"></input>
+			</p>
+
+			<input type="submit" value="Signup"></input>
+		</fieldset>
+	</form>
+</article>

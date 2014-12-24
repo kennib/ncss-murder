@@ -1,6 +1,7 @@
 from .game import Game
 from .player import Player
 from .murder import Murder
+from .admin import Admin
 from .stats import most_wanted
 from .template import templater, inside_page
 
@@ -15,7 +16,10 @@ def home(response, game_id=None):
 			latest_id, year, number = latest
 			response.redirect('/'+str(latest_id))
 		else:
-			response.redirect('/login')
+			if Admin.no_users():
+				response.redirect('/signup')
+			else:
+				response.redirect('/login')
 	else:
 		players = list(Player.iter(game=game_id))
 		murders = list(Murder.iter(game=game_id))
