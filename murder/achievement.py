@@ -190,6 +190,10 @@ def achievements_template(game_id, achievements) -> str:
 	template = templater.load('achievements.html').generate(game_id=game_id, achievements=achievements, profile=False)
 	return inside_page(template, game_id=game_id)
 
+
+from .admin import disableable
+
+@disableable
 def achievements(response, game_id=None):
 	achievements = list(Achievement.iter())
 	for achievement in achievements:
