@@ -1,6 +1,6 @@
 from hashlib import sha256
 
-from .db import Model
+from .db import Model, DoesNotExistError
 from .game import Game
 from .player import Player
 from .location import Location
@@ -46,8 +46,8 @@ class Admin(Model):
 		)""".format(cls._table)
 		cls._sql(CREATE)
 
-def admin_template(game_id, players=None, locations=None) -> str:
-	admin = templater.load('admin.html').generate(game_id=game_id, players=players, locations=locations)
+def admin_template(game_id, game=None, players=None, locations=None) -> str:
+	admin = templater.load('admin.html').generate(game_id=game_id, game=game, players=players, locations=locations)
 	return inside_page(admin, game_id=game_id)
 
 def admin(response, game_id=None):
@@ -56,10 +56,15 @@ def admin(response, game_id=None):
 	if Admin.no_users():
 		response.redirect('/signup?game={}&failed=true'.format(game_id) if game_id != None else '/signup')
 	elif loggedin:
+		try:
+			game = Game.get(id=game_id)
+			game.disabled = is_disabled(game.disabled)
+		except DoesNotExistError:
+			game = None
 		player_query = Player.select(game=game_id)
 		players = [{'id': id, 'name': name, 'type': type} for id, game, name, type in player_query]
 		locations = list(Location.iter())
-		response.write(admin_template(game_id, players, locations))
+		response.write(admin_template(game_id, game, players, locations))
 	else:
 		response.redirect('/login?game={}'.format(game_id) if game_id != None else '/login')
 
