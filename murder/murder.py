@@ -1,6 +1,7 @@
 import json
 
 from .db import Model
+from .admin import disableable
 from .player import Player
 from .location import Location
 from .template import templater, inside_page
@@ -68,6 +69,7 @@ def murder_list_template(game_id, murders) -> str:
 	template = templater.load('murders.html').generate(game_id=game_id, murders=murders, profile=False)
 	return inside_page(template, game_id=game_id)
 
+@disableable
 def murder_list(response, game_id=None):
 	murders = list(Murder.all_murders(game_id))
 	response.write(murder_list_template(game_id, murders))
@@ -76,6 +78,7 @@ def murder_map_template(game_id, murders) -> str:
 	template = templater.load('murder_map.html').generate(game_id=game_id, murders=murders)
 	return inside_page(template, game_id=game_id)
 
+@disableable
 def murder_map(response, game_id=None):
 	murders = list(Murder.all_murders(game_id))
 	response.write(murder_map_template(game_id, murders))

@@ -2,6 +2,7 @@ from .game import Game
 from .player import Player
 from .murder import Murder
 from .admin import Admin
+from .admin import disableable
 from .stats import most_wanted
 from .template import templater, inside_page
 
@@ -9,6 +10,7 @@ def home_template(game_id, **kwargs) -> str:
 	home = templater.load('home.html').generate(game_id=game_id, **kwargs)
 	return inside_page(home, game_id=game_id)
 
+@disableable
 def home(response, game_id=None):
 	if game_id is None:
 		latest = Game.latest()

@@ -48,6 +48,10 @@ def profile_template(game_id, player, death, murders, achievements) -> str:
 	profile = templater.load('profile.html').generate(game_id=game_id, player=player, death=death, murders=murders, achievements=achievements, profile=True)
 	return inside_page(profile, game_id=game_id)
 
+
+from .admin import disableable
+
+@disableable
 def profiles(response, game_id=None):
 	players = list(Player.iter(game=game_id))
 	for player in players:
@@ -55,6 +59,7 @@ def profiles(response, game_id=None):
 	template = profiles_template(game_id, players)
 	response.write(template)
 
+@disableable
 def profile(response, game_id=None, player_id=None):
 	player = Player.find(game=game_id, name=player_id.replace('+', ' '))
 	death = player.death()

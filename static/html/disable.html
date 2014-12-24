@@ -1,0 +1,23 @@
+<article>
+	<h2>Disable Game Website</h2>
+
+	<form method="POST" action="/disable" id="disable">
+		<input type="hidden" name="game" value="{{ game_id }}"></input>
+		
+			<input type="radio" name="disable" value="True" id="disable_true" {{ 'checked' if game.disabled else '' }}>
+			<label for="disable_true">Disable website</label>
+			<input type="radio" name="disable" value="False" id="disable_false" {{ 'checked' if not game.disabled else '' }}>
+			<label for="disable_false">Enable website</label>
+	</form>
+
+	<script>
+		var form = document.querySelector('form#disable');
+		form.onchange = function() {
+			var data = new FormData(form);
+
+			var req = new XMLHttpRequest();
+			req.open(form.method, form.action);
+			req.send(data);
+		};
+	</script>
+</article>

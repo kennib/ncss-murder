@@ -4,9 +4,9 @@ from datetime import date
 class Game(Model):
 	_table = 'game'
 
-	def __init__(self, id, year, number):
+	def __init__(self, id, year, number, disabled=False):
 		super(Game, self).__init__()
-		self.id, self.year, self.number = id, year, number
+		self.id, self.year, self.number, self.disabled = id, year, number, disabled
 
 	@classmethod
 	def latest(cls, year=None) -> (int, int):
@@ -30,6 +30,7 @@ class Game(Model):
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			year INTEGER NOT NULL,
 			number INTEGER NOT NULL,
+			disabled BOOL DEFAULT false,
 			UNIQUE (year, number)
 		)"""
 		cls._sql(CREATE)

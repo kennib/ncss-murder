@@ -8,6 +8,10 @@ def stats_template(game_id, players, murders, **kwargs) -> str:
 	stats = templater.load('stats.html').generate(game_id=game_id, murders=murders, players=players, **kwargs)
 	return inside_page(stats, game_id=game_id)
 
+
+from .admin import disableable
+
+@disableable
 def stats(response, game_id=None):
 	players = list(Player.iter(game=game_id))
 	murders = list(Murder.iter(game=game_id))

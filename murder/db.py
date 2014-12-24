@@ -22,7 +22,7 @@ class Model(object):
 	def _attribs(cls, sep, kwargs):
 		keys = kwargs.keys()
 		attribs = '= ? {} '.format(sep).join(keys) + ' = ?'
-		return attribs, kwargs.values()
+		return attribs, list(kwargs.values())
 
 	@classmethod
 	def select(cls, **kwargs):

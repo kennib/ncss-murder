@@ -1,6 +1,7 @@
 from hashlib import sha256
 
-from .db import Model
+from .db import Model, DoesNotExistError
+from .game import Game
 from .player import Player
 from .location import Location
 from .template import templater, inside_page
@@ -45,8 +46,8 @@ class Admin(Model):
 		)""".format(cls._table)
 		cls._sql(CREATE)
 
-def admin_template(game_id, players=None, locations=None) -> str:
-	admin = templater.load('admin.html').generate(game_id=game_id, players=players, locations=locations)
+def admin_template(game_id, game=None, players=None, locations=None) -> str:
+	admin = templater.load('admin.html').generate(game_id=game_id, game=game, players=players, locations=locations)
 	return inside_page(admin, game_id=game_id)
 
 def admin(response, game_id=None):
@@ -55,10 +56,15 @@ def admin(response, game_id=None):
 	if Admin.no_users():
 		response.redirect('/signup?game={}&failed=true'.format(game_id) if game_id != None else '/signup')
 	elif loggedin:
+		try:
+			game = Game.get(id=game_id)
+			game.disabled = is_disabled(game.disabled)
+		except DoesNotExistError:
+			game = None
 		player_query = Player.select(game=game_id)
 		players = [{'id': id, 'name': name, 'type': type} for id, game, name, type in player_query]
 		locations = list(Location.iter())
-		response.write(admin_template(game_id, players, locations))
+		response.write(admin_template(game_id, game, players, locations))
 	else:
 		response.redirect('/login?game={}'.format(game_id) if game_id != None else '/login')
 
@@ -69,6 +75,10 @@ def signup_template(game_id, failed=False) -> str:
 def login_template(game_id, failed=False) -> str:
 	login = templater.load('login.html').generate(game_id=game_id, failed=failed)
 	return inside_page(login, game_id=game_id)
+
+def disabled_template(game_id) -> str:
+	disabled = templater.load('disabled.html').generate(game_id=game_id)
+	return inside_page(disabled, game_id=game_id)
 
 def signup_page(response):
 	game_id = response.get_field('game')
@@ -106,3 +116,49 @@ def login(response):
 		response.redirect('{}/admin'.format('/'+game_id if game_id else ''))
 	else:
 		response.redirect('/login?game={}&failed=true'.format(game_id) if game_id != None else '/login')
+
+def is_disabled(disable):
+	if str(disable).lower() in ['true', '1']:
+		disabled = True
+	elif str(disable).lower() in ['false', '0']:
+		disabled = False
+	else:
+		disabled = None
+
+	return disabled
+	
+def disable(response):
+	game_id = response.get_field('game')
+	disable = response.get_field('disable')
+
+	disabled = is_disabled(disable)
+
+	if game_id != None or game_id != '' and disable != None:
+		game = Game.get(id=game_id)
+		game.update(disabled=disabled)
+
+def disableable(handler):
+	def disableable_handler(response, game_id=None, *args):
+		if game_id is None:
+			latest = Game.latest()
+			if latest is not None:
+				game_id, year, number = latest 
+			else:
+				game_id = None
+
+		if game_id is not None:
+			game = Game.get(id=game_id)
+			disabled = is_disabled(game.disabled)
+		else:
+			disabled = False
+
+		loggedin = response.get_secure_cookie('loggedin')
+		
+		if disabled and not loggedin:
+			response.write(disabled_template(game_id))
+		elif game_id != None:
+			handler(response, game_id, *args)
+		else:
+			handler(response, *args)
+
+	return disableable_handler
