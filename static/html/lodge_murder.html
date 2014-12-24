@@ -60,10 +60,9 @@
 		</fieldset>
 	</form>
 	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.js"></script>
 	<script>
-		var d = new Date();
-		var now = d.toISOString().slice(0, 11) + d.getHours() + ':' + (d.getMinutes() >= 10 ? d.getMinutes() : '0'+d.getMinutes());
 		var datetime = document.querySelector('input[type=datetime-local]');
-		datetime.value = now;
+		datetime.value = moment().format('YYYY-MM-DDTHH:mm');
 	</script>
 </article>
