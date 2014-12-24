@@ -4,6 +4,7 @@
 
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+	<script src="/static/js/lib/oms.min.js"></script>
 	<style>
 		#map { height: 240px; }
 	</style>
@@ -17,9 +18,22 @@
 			minZoom: 13,
 		}).addTo(map);
 
+		var options = {
+			'keepSpiderfied': true,
+			'circleSpiralSwitchover': 12,
+		};
+
+		var oms = new OverlappingMarkerSpiderfier(map, options);
+
+		oms.legColors.highlighted = oms.legColors.usual;
+
+		oms.addListener('spiderfy', function() {
+				map.closePopup();
+			});
+
 		function murderPopupText(murder) {
 			return '<b>' + murder.murderer + ' murdered ' + murder.victim + '</b><br>' + murder.datetime.replace('T', ', ');
-		}
+		};
 		
 		function murderMarkers(murders) {
 			var markers = murders.filter(function(murder) {
@@ -27,6 +41,7 @@
 			}).map(function(murder) {
 				var marker = L.marker([murder.lat, murder.lng]).addTo(map)
 					.bindPopup(murderPopupText(murder));
+				oms.addMarker(marker);
 				return marker;
 			});
 		};
