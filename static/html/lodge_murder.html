@@ -1,7 +1,7 @@
 <article>
 	<h2>Lodge a murder</h2>
 	
-	<form method="POST" action="/murder">
+	<form method="POST" action="/murder" onsubmit="localiseDate(this)">
 		<input type="hidden" name="game" value="{{ game_id }}"></input>
 
 		<fieldset>
@@ -33,7 +33,8 @@
 		<fieldset>
 			<p>
 				<label for="datetime">Datetime</label>
-				<input type="datetime-local" name="datetime"></input>
+				<input type="datetime-local" name="datetimeLocal"></input>
+				<input type="hidden" name="datetime"></input>
 			</p>
 		</fieldset>
 		<fieldset>
@@ -60,10 +61,14 @@
 		</fieldset>
 	</form>
 	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.js"></script>
 	<script>
-		var d = new Date();
-		var now = d.toISOString().slice(0, 11) + d.getHours() + ':' + (d.getMinutes() >= 10 ? d.getMinutes() : '0'+d.getMinutes());
 		var datetime = document.querySelector('input[type=datetime-local]');
-		datetime.value = now;
+		if (datetime.value === '')
+			datetime.value = moment().format('YYYY-MM-DDTHH:mm');
+
+		function localiseDate(form) {
+			form.datetime.value = form.datetimeLocal.value + moment().format('ZZ');
+		}
 	</script>
 </article>
