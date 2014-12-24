@@ -63,6 +63,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.js"></script>
 	<script>
 		var datetime = document.querySelector('input[type=datetime-local]');
-		datetime.value = moment().format('YYYY-MM-DDTHH:mm');
+		if (datetime.value === '')
+			datetime.value = moment().format('YYYY-MM-DDTHH:mm');
 	</script>
 </article>
