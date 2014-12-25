@@ -26,6 +26,12 @@
 				
 		var svg = chart.append('svg');
 
+		var colour = d3.hsl('#ad213a');
+		var colours = d3.range(0, 360, 10).map(function(d, i) {
+			var offset = (i%3) * 120;
+			return d3.hsl((colour.h + d + offset) % 360, colour.s, colour.l);
+		});
+
 		d3.json('/murder?game={{ game_id }}', function(murders) {
 			if (murders.length >= 1)
 				dataGroupSelect.selectAll('option')
@@ -43,6 +49,7 @@
 			}
 
 			var chart = nv.models.multiBarChart()
+				.color(colours)
 				.x(function(murderSet) { return murderSet.key; })
 				.y(function(murderSet) { return murderSet.values; })
 				.transitionDuration(350)
