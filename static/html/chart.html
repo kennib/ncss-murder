@@ -37,7 +37,7 @@
 				dataGroupSelect.selectAll('option')
 					.data(d3.keys(murders[0]))
 					.enter().append('option')
-						.text(function(d) { return d; })
+						.text(function(d) { return d.charAt(0).toUpperCase() + d.slice(1);; })
 						.attr('value', function(d) { return d; });
 					
 			function murdersBy(dataGroup, timeGroup) {
