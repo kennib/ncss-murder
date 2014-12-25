@@ -236,13 +236,18 @@ form fieldset label {
 	text-align: left;
 }
 
+select,
+input:not([type=submit]):not([type=radio]) {
+	padding: 5px;	
+
+	font-size: 30px;
+	font-family: 'Josefin Sans';
+}
+
 form fieldset select,
 form fieldset input:not([type=submit]):not([type=radio]) {
 	display: block;
 	width: 100%;
-
-	font-size: 30px;
-	font-family: 'Josefin Sans';
 }
 
 @media screen and (min-width:750px) {
@@ -250,13 +255,16 @@ form fieldset input:not([type=submit]):not([type=radio]) {
 		float: left;
 	}
 
+	select,
+	input:not([type=submit]):not([type=radio]) {
+		font-size: 20px;
+	}
+
 	form fieldset select,
 	form fieldset input:not([type=submit]):not([type=radio]) {
 		display: inline-block;
 		box-sizing: border-box;
 		width: 55%;
-
-		font-size: 20px;
 	}
 }
 
