@@ -29,6 +29,14 @@ class Player(Model):
 		from .achievement import AchievementProgress
 		return AchievementProgress.find_achievements(player=self.id)
 
+	def achievement_score(self):
+		from .achievement import AchievementProgress
+		score = 0
+		for achievement in AchievementProgress.find_achievements(player=self.id):
+			if (achievement.goal and achievement.progress >= achievement.goal) or (not achievement.goal and achievement.progress):
+				score += achievement.points
+		return score
+
 	@classmethod
 	def init_db(cls):
 		CREATE = """CREATE TABLE player (
@@ -55,7 +63,7 @@ from .admin import disableable
 def profiles(response, game_id=None):
 	players = list(Player.iter(game=game_id))
 	for player in players:
-                player.death = player.death() != None
+                player.death = player.death() 
 	template = profiles_template(game_id, players)
 	response.write(template)
 
@@ -65,6 +73,7 @@ def profile(response, game_id=None, player_id=None):
 	death = player.death()
 	murders = player.murders()
 	achievements = player.achievements()
+	print(achievements)
 	template = profile_template(game_id, player, death, murders, achievements)
 	response.write(template)
 

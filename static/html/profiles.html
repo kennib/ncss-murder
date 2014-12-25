@@ -8,8 +8,10 @@
 			<tr>
 				<th>Name</th>
 				<th>Role</th>
+				<th>Kill</th>
+				<th>Achievement points</th>
 				<th>Dead or Alive?</th>
-				<th>Kill(s)</th>
+				<th>Time of Death</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -17,12 +19,14 @@
 			<tr>
 				<td>{% raw template('profile_link.html', game_id=game_id, player_name=player.name) %}</td>
 				<td>{{ player.type }}</td>
-				{% if player.death == True %}
+				<td>{{ len(player.murders()) }}</td>
+				<td>{{ player.achievement_score() }}</td>
+				{% if player.death == None %}
 					<td>Dead</td>
 				{% else %}
 					<td>Alive</td>
 				{% end %}
-				<td>{{ len(player.murders()) }}</td>
+				<td>{{ " ".join(player.death.datetime.replace("T","+").split("+")[:2]) if player.death != None else None }}</tr>
 			</tr>
 		{% end %}
 		</tbody>
@@ -39,7 +43,16 @@
 			}
 		});
 		$(document).ready(function() {
-			$('table').dynatable();
+			$('table').dynatable({
+				readers: {
+					kill : function(el, record) {
+						return Number(el.innerHTML) || 0;
+					},
+					achievementPoints : function(el, record) {
+						return Number(el.innerHTML) || 0;
+					}
+				}
+			});
 		});
 	</script>
 </article>

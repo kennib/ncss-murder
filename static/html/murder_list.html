@@ -24,7 +24,7 @@
 				<td>{% raw template('profile_link.html', game_id=game_id, player_name=murder.murderer) %}</td>
 			{% end %}
 				<td>{% raw template('profile_link.html', game_id=game_id, player_name=murder.victim) %}</td>
-				<td>{{ murder.datetime.split("T")[0] + " " + murder.datetime.split("T")[1].split("+")[0] }}</td>
+				<td>{{ " ".join(murder.datetime.replace("T","+").split("+")[:2]) }}</td>
 				<td>{{ murder.location }}</td>
 			</tr>
 			{% end %}
