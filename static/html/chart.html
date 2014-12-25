@@ -1,10 +1,10 @@
 <article>
 	<h2>Murder Chart</h2>
 
-	<svg id="murder-chart"></svg>
+	<figure id="murder-chart"></figure>
 
 	<style>
-		svg#murder-chart {
+		#murder-chart svg {
 			width: 100%;
 			height: 400px;
 		}
@@ -15,34 +15,64 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.js"></script>
 
 	<script>
+		var chart = d3.select('#murder-chart');
+		var dataGroupSelect = chart.append('select');
+		var timeGroupSelect = chart.append('select');
+		timeGroupSelect.selectAll('option')
+			.data([{key: 'Day', value: 'Do of MMM'}, {key: 'Hour', value: 'hh A'}])
+			.enter().append('option')
+				.text(function(d) { return d.key; })
+				.attr('value', function(d) { return d.value; });
+				
+		var svg = chart.append('svg');
+
 		d3.json('/murder?game={{ game_id }}', function(murders) {
-			var murdersByLocation = d3.nest()
-				.key(function(murder) { return murder.location; })
-				.key(function(murder) { return moment(murder.datetime).format('Do of MMM'); })
-				.rollup(function(murders) { return murders.length; })
-				.entries(murders);
+			if (murders.length >= 1)
+				dataGroupSelect.selectAll('option')
+					.data(d3.keys(murders[0]))
+					.enter().append('option')
+						.text(function(d) { return d; })
+						.attr('value', function(d) { return d; });
+					
+			function murdersBy(dataGroup, timeGroup) {
+				return d3.nest()
+					.key(function(murder) { return murder[dataGroup]; })
+					.key(function(murder) { return moment(murder.datetime).format(timeGroup); })
+					.rollup(function(murders) { return murders.length; })
+					.entries(murders);
+			}
+
+			var chart = nv.models.multiBarChart()
+				.x(function(murderSet) { return murderSet.key; })
+				.y(function(murderSet) { return murderSet.values; })
+				.transitionDuration(350)
+				.reduceXTicks(true)
+				.rotateLabels(0)
+				.showControls(true)
+				.groupSpacing(0.1);
+
+			function updateChartData() {
+				svg
+					.datum(murdersBy(dataGroupSelect.node().value, timeGroupSelect.node().value))
+					.call(chart);
+			}
+			
+			dataGroupSelect
+				.on('change', updateChartData);
+			timeGroupSelect
+				.on('change', updateChartData);
 
 			nv.addGraph(function() {
-				var chart = nv.models.multiBarChart()
-					.x(function(murderSet) { return murderSet.key; })
-					.y(function(murderSet) { return murderSet.values; })
-					.transitionDuration(350)
-					.reduceXTicks(true)
-					.rotateLabels(0)
-					.showControls(true)
-					.groupSpacing(0.1);
-
 				chart.yAxis
 					.tickFormat(d3.format('d'));
 
-				d3.select('#murder-chart')
-					.datum(murdersByLocation)
-					.call(chart);
-
 				nv.utils.windowResize(chart.update);
+				
+				updateChartData();
 
 				return chart;
 			});
+
 		});
 	</script>
 </article>
