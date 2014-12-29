@@ -1,6 +1,8 @@
 <article>
 	<h2>Achievements</h2>
-
+	{% if profile %}
+		<h3>Achievement points: <span style='font-weight:normal'>{{ player.achievement_score() }}</span></h3> 
+	{% end %}
 	<ul class="achievements">
 	{% for achievement in achievements %}
 		<li class="{{ 'complete' if  profile and ((achievement.goal and achievement.progress >= achievement.goal) or (not achievement.goal and achievement.progress)) else '' }}">
