@@ -39,7 +39,22 @@ class Achievement(Model):
 		c = self._sql(HOLDERS, (self.id,))
 		holders, = c.fetchone()
 		return holders
-		
+	
+	def holders_detail(self):
+		HOLDERS = """SELECT name, TYPE 
+		FROM (SELECT pa.player
+			FROM achievement AS a
+			LEFT JOIN achievement_progress AS pa ON a.id = pa.achievement
+			WHERE a.id = ?
+			GROUP BY pa.player
+			HAVING pa.progress = a.goal
+				AND (pa.id = max(pa.id) OR pa.id IS NULL)) AS achieved
+		INNER JOIN player
+		WHERE achieved.player = player.id
+		"""
+		c = self._sql(HOLDERS, (self.id,))
+		holders_detail = c.fetchall()
+		return holders_detail
 
 	@classmethod
 	def total_progress(cls, game):
@@ -203,6 +218,13 @@ def achievements(response, game_id=None):
 	for achievement in achievements:
 		achievement.holders = achievement.holders()
 	response.write(achievements_template(game_id, achievements))
+
+def achievements_stat(response, game_id=None, achievement_id=None):
+	try:
+		achievements_holders = Achievement.get(id=achievement_id).holders_detail()
+		response.write("["+",".join('{"name":"%s","role":"%s"}' % holder for holder in achievements_holders)+"]")
+	except DoesNotExistError:
+		response.write("[]")
 
 def achievement_progress(response):
 	game_id = response.get_field('game')

@@ -9,7 +9,7 @@ from .location import Location
 from .murder import murder, murder_submit, lodge, murder_list, murder_map, Murder
 from .stats import stats
 from .admin import admin, signup_page, signup, login_page, login, disable, Admin 
-from .achievement import achievements, achievement_progress, Achievement, AchievementProgress
+from .achievement import achievements, achievements_stat, achievement_progress, Achievement, AchievementProgress
 
 def init_db(database=None):
 	# Create a custom database connection
@@ -53,6 +53,7 @@ def init_server(**kwargs):
 	server.register('{}/murders/?'.format(game_id), murder_list)
 	server.register('{}/stats/?'.format(game_id), stats)
 	server.register('{}/achievements/?'.format(game_id), achievements)
-	server.register('{}?/?'.format(game_id), home)	
+	server.register('{}/achievements_stat/([0-9]+)'.format(game_id), achievements_stat)
+	server.register('{}?/?'.format(game_id), home)
 
 	return server
