@@ -67,3 +67,7 @@ th a:hover {
   background: none;
   color: #999;
 }
+
+th.dynatable-head{
+  line-height: 20px;
+}
