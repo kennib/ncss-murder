@@ -335,33 +335,16 @@ ul.achievements > li .points {
 	border-radius: 20px;;
 }
 
-.easy-modal,
-.easy-modal-animated {
-	width: 400px;
-	padding: 0px;
-	box-shadow: 1px 1px 3px rgba(0,0,0,0.35);
-	background-color: white;
-}
-
-.easy-modal-header{
+.modal-header{
 	background: none repeat scroll 0% 0% #efefef;
-	padding: 8px 8px 4px;
+	padding: 4px;
 	border-bottom: 1px solid #eeeeee;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
 }
 
-.easy-modal-content{
+.modal-content{
 	padding: 16px 8px 16px 8px;
-}
-
-.easy-modal-close {
-	position: absolute;
-	top: 12px;
-	right: 12px;
-	display: block;
-	width: 14px;
-	height: 14px;
-	background: url("/static/img/modal_close.png") repeat scroll 0% 0% transparent;
-	z-index: 2;
 }
 
 #achievement-name{
