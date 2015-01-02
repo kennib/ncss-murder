@@ -335,6 +335,22 @@ ul.achievements > li .points {
 	border-radius: 20px;;
 }
 
+.modal-header{
+	background: none repeat scroll 0% 0% #efefef;
+	padding: 4px;
+	border-bottom: 1px solid #eeeeee;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+}
+
+.modal-content{
+	padding: 16px 8px 16px 8px;
+}
+
+#achievement-name{
+	margin-top: -10px!important;
+}
+
 /* Progress bar */
 .progress-bar {
 	display: block;
@@ -356,4 +372,8 @@ ul.achievements > li .points {
 
 	background-color: #ad213a;
 	border-radius: 10px;
+}
+
+.selectable {
+	cursor:pointer;
 }

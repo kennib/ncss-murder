@@ -1,9 +1,15 @@
 <article>
 	<h2>Achievements</h2>
-
+	{% if profile %}
+		<h3>Achievement points: <span style='font-weight:normal'>{{ player.achievement_score() }}</span></h3> 
+	{% end %}
 	<ul class="achievements">
 	{% for achievement in achievements %}
-		<li class="{{ 'complete' if  profile and ((achievement.goal and achievement.progress >= achievement.goal) or (not achievement.goal and achievement.progress)) else '' }}">
+		{% if profile %}
+			<li class="{{ 'complete' if profile and achievement.completed else '' }}">
+		{% else %}
+			<li class="selectable" onclick="{{ "show_holder({},'{}')".format(achievement.id,achievement.name) }}">
+		{% end %}
 			<p class="points">
 				{{ achievement.points }}
 			</p>
@@ -13,14 +19,14 @@
 			{% if profile %}
 			<div class="progress-bar">
 				{% if achievement.goal and achievement.progress %}
-				<div class="progress" style="width: {{ min(achievement.progress, achievement.goal) / achievement.goal * 100 }}%;"></div>
+				<div class="progress" style="width: {{ achievement.progress / achievement.goal * 100 }}%;"></div>
 				{% elif achievement.progress %}
 				<div class="progress" style="width: 100%;"></div>
 				{% end %}
 			</div>
 			<small>
 				{% if achievement.goal %}
-					{{ min(achievement.progress, achievement.goal) }} / {{ achievement.goal }} {{ achievement.unit }}
+					{{ achievement.progress }} / {{ achievement.goal }} {{ achievement.unit }}
 				{% else %}
 					&nbsp;
 				{% end %}
@@ -41,3 +47,91 @@
 	{% end %}
 	</ul>
 </article>
+
+{% if not profile %}
+<script src="/static/js/lib/jquery.min.js"></script>
+<script src="/static/js/lib/jquery.remodal.js"></script>
+<script src="/static/js/lib/jquery.dynatable.js"></script>
+<link rel="stylesheet" href="/static/css/lib/jquery.dynatable.css" />
+<link rel="stylesheet" href="/static/css/lib/jquery.remodal.css" />
+
+<script>
+	var game_id = {{ game_id }};
+
+	$.dynatableSetup({
+		features: {
+			paginate: false,
+			sort: true,
+			pushState: false,
+			search: false,
+			recordCount: false,
+			perPageSelect: false
+		}
+	});
+
+	function show_holder(achievement_id, achievement_name){
+		console.log(achievement_id);
+		if (!isNaN(achievement_id)) {
+			$.ajax({
+				url: "/"+game_id+'/achievements_stat/'+achievement_id,
+				success: function(data){
+					try {
+						records = JSON.parse(data);
+					}
+					catch (err) {
+						console.log("Bad JSON:"+data);
+						return;
+					}
+					$("#achievement-name").empty();
+					$("#achievement-name").append(achievement_name);
+					if (records.length != 0) {
+						var dynatable = $('#achievement-holder-table').data('dynatable');
+						dynatable.records.updateFromJson({records:records});
+						dynatable.records.init();
+						dynatable.process();
+						$("#achievement-table").show();
+						$("#achievement-none").hide();
+					} else {
+						$("#achievement-table").hide();
+						$("#achievement-none").show();
+					}
+					$.remodal.lookup[$('[data-remodal-id=achievement-holders-modal]').data('remodal')].open();
+				}
+			});
+		}
+	}
+
+	$(document).ready(function() {
+		$('#achievement-holder-table').dynatable();
+		
+		$('.easy-modal').easyModal({
+			top: 200,
+			overlay: 0.2
+		});
+
+		$('#modal-close').click(function (){
+			$('#achievement-holders-modal').trigger('closeModal');
+		});
+	});
+</script>
+
+<article id='achievement-holders-modal' class='remodal' data-remodal-id="achievement-holders-modal" data-remodal-options="hashTracking: false">
+	<div class="modal-header">
+		<h2>Achievements Holders</h2>
+		<h4 id="achievement-name"></h4>
+	</div>
+	<div id="achievement-table" class="modal-content" style="display=none">
+		<table id="achievement-holder-table">
+			<thead>
+				<th>Name</th>
+				<th>Role</th>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<div id="achievement-none" class="modal-content" style="display=none">
+		<p>No one have this achievement yet!</p>
+	</div>
+</article>
+{% end %}

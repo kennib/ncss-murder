@@ -27,19 +27,25 @@ class Achievement(Model):
 
 	def holders(self):
 		HOLDERS = """SELECT COUNT(*)
-		FROM (SELECT pa.id
-			FROM achievement AS a
-			LEFT JOIN achievement_progress AS pa ON a.id = pa.achievement
-			WHERE a.id = ?
-			GROUP BY pa.player
-			HAVING pa.progress = a.goal
-				AND (pa.id = max(pa.id) OR pa.id IS NULL)
-			)
+		FROM achievement_progress 
+		WHERE achievement = ? AND completed = 1
 		"""
 		c = self._sql(HOLDERS, (self.id,))
 		holders, = c.fetchone()
 		return holders
-		
+	
+	def holders_detail(self):
+		HOLDERS = """SELECT name, TYPE 
+		FROM (SELECT player
+			FROM achievement_progress 
+			WHERE achievement = ? AND completed = 1
+		) AS achieved
+		INNER JOIN player
+		WHERE achieved.player = player.id
+		"""
+		c = self._sql(HOLDERS, (self.id,))
+		holders_detail = c.fetchall()
+		return holders_detail
 
 	@classmethod
 	def total_progress(cls, game):
@@ -76,7 +82,12 @@ class MurderAchievement(Achievement):
 			player_murders = [murder for murder in murders
 			                  if murder.murderer == player.id and self.condition(murder)]
 			progress = min(len(player_murders), self.goal)
-			AchievementProgress.add(achievement=self.id, player=player.id, progress=progress)
+
+			progress_record = AchievementProgress.find(achievement=self.id,player=player.id)
+			if progress_record == None:
+				AchievementProgress.add(achievement=self.id, player=player.id, progress=progress, completed=int(progress >= self.goal))
+			elif progress_record.completed != 1:
+				progress_record.update(progress=progress, completed=int(progress >= self.goal))
 		
 	def condition(self, murder):
 		return True
@@ -114,12 +125,16 @@ class ConsecutiveMurderAchievement(Achievement):
 				# For each murder check if the next n murders
 				# are within the time limit for the n consecutive murders
 				is_consecutive = lambda a: lambda b: abs(a.datetime - b.datetime) < self.within
-				progress = max([len(list(takewhile(is_consecutive(player_murders[m]), player_murders[m:])))
-								for m, murder in enumerate(player_murders)])
+				progress = min(max([len(list(takewhile(is_consecutive(player_murders[m]), player_murders[m:])))
+								for m, murder in enumerate(player_murders)]), self.goal)
 			else:
 				progress = 0
-					
-			AchievementProgress.add(achievement=self.id, player=player.id, progress=progress)
+			
+			progress_record = AchievementProgress.find(achievement=self.id,player=player.id)
+			if progress_record == None:
+				AchievementProgress.add(achievement=self.id, player=player.id, progress=progress, completed=int(progress >= self.goal))
+			elif progress_record.completed != 1:
+				progress_record.update(progress=progress, completed=int(progress >= self.goal))
 
 class DeathAchievement(Achievement):
 	def __init__(self, id, name, description, points, goal=None, unit='murders'):
@@ -131,7 +146,12 @@ class DeathAchievement(Achievement):
 		for player in players:
 			death = any([murder for murder in murders
 			                    if murder.victim == player.id and self.condition(murder)])
-			AchievementProgress.add(achievement=self.id, player=player.id, progress=1 if death else 0)
+
+			progress_record = AchievementProgress.find(achievement=self.id,player=player.id)
+			if progress_record == None:
+				AchievementProgress.add(achievement=self.id, player=player.id, progress=1 if death else 0, completed=1 if death else 0)
+			elif progress_record.completed != 1:
+				progress_record.update(progress=1 if death else 0, completed=1 if death else 0)
 		
 	def condition(self, death):
 		return True
@@ -152,20 +172,20 @@ Achievement.achievements = [
 	ConsecutiveMurderAchievement(None, 'Triple kill', 'Kill three people within an hour', 15, 3, 'successive kills', timedelta(hours=1)),
 	ConsecutiveMurderAchievement(None, 'Monster kill', 'Kill five people within 24 hours', 15, 5, 'successive kills', timedelta(days=1)),
 	InnocentDeathAchievement(None, 'Innocent victim', 'Die without killing', 5),
-	TimeMurderAchievement(None, 'Early bird', 'Kill during the morning (before 9am)', 5, 1, 'worm gotten', time(hour=4), time(hour=8)),
+	TimeMurderAchievement(None, 'Early bird', 'Kill during the morning (before 9am)', 5, 1, 'worm gotten', time(hour=4), time(hour=9)),
 	TimeMurderAchievement(None, 'Mafia talk', 'Kill during the night (after 8pm)', 5, 1, 'nighttime hit', time(hour=20), time(hour=4)),
 ]
 
 class AchievementProgress(Model):
 	_table = 'achievement_progress'
 
-	def __init__(self, achievement, game, player, progress):
+	def __init__(self, id, achievement, player, progress, completed):
 		super(AchievementProgress, self).__init__()
-		self.id, self.achievement, self.game, self.player, self.progress = id, achievement, game, player, progress
+		self.id, self.achievement, self.player, self.progress, self.completed = id, achievement, player, progress, completed
 
 	@classmethod
 	def find_achievements(cls, player):
-		achievements = """SELECT a.*, pa.progress FROM achievement AS a
+		achievements = """SELECT a.*, pa.progress, pa.completed FROM achievement AS a
 			LEFT JOIN achievement_progress AS pa ON a.id = pa.achievement
 			WHERE pa.player = ? OR pa.player IS NULL
 			GROUP BY a.id
@@ -174,9 +194,10 @@ class AchievementProgress(Model):
 		c = cls._sql(achievements, (player,))
 		row = c.fetchone()
 		while row is not None:
-			*achieve, progress = row
+			*achieve, progress, completed = row
 			achievement = Achievement(*achieve)
 			achievement.progress = progress
+			achievement.completed = completed
 			yield achievement
 			row = c.fetchone()
 
@@ -186,7 +207,8 @@ class AchievementProgress(Model):
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			achievement INTEGER NOT NULL references achievement (id),
 			player INTEGER NOT NULL references player (id),
-			progress INTEGER DEFAULT 0
+			progress INTEGER DEFAULT 0,
+			completed INTEGER DEFAULT 0
 		)"""
 		cls._sql(CREATE)
 
@@ -203,6 +225,13 @@ def achievements(response, game_id=None):
 	for achievement in achievements:
 		achievement.holders = achievement.holders()
 	response.write(achievements_template(game_id, achievements))
+
+def achievements_stat(response, game_id=None, achievement_id=None):
+	try:
+		achievements_holders = Achievement.get(id=achievement_id).holders_detail()
+		response.write("["+",".join('{"name":"%s","role":"%s"}' % holder for holder in achievements_holders)+"]")
+	except DoesNotExistError:
+		response.write("[]")
 
 def achievement_progress(response):
 	game_id = response.get_field('game')
