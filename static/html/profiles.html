@@ -22,11 +22,11 @@
 				<td>{{ len(player.murders()) }}</td>
 				<td>{{ player.achievement_score() }}</td>
 				{% if player.death == None %}
-					<td>Dead</td>
-				{% else %}
 					<td>Alive</td>
+				{% else %}
+					<td>Dead</td>
 				{% end %}
-				<td>{{ " ".join(player.death.datetime.replace("T","+").split("+")[:2]) if player.death != None else None }}</tr>
+				<td>{{ " ".join(player.death.datetime.replace("T","+").split("+")[:2]) if player.death != None else "—" }}</tr>
 			</tr>
 		{% end %}
 		</tbody>
