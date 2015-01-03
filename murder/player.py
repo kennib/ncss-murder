@@ -73,7 +73,6 @@ def profile(response, game_id=None, player_id=None):
 	death = player.death()
 	murders = player.murders()
 	achievements = player.achievements()
-	print(achievements)
 	template = profile_template(game_id, player, death, murders, achievements)
 	response.write(template)
 
