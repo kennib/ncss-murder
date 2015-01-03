@@ -7,6 +7,18 @@ class Player(Model):
 	def __init__(self, id, game, name, type):
 		super(Player, self).__init__()
 		self.id, self.game, self.name, self.type = id, game, name, type
+	
+	@classmethod
+	def select(cls, **kwargs):
+		"""select(**kwargs) -> instance
+		   returns a cursor from the database with given attributes"""
+		if len(kwargs) == 0:
+			query = """SELECT * FROM {} ORDER BY name""".format(cls._table)
+			values = []
+		else:
+			attribs, values = cls._attribs('AND', kwargs)
+			query = """SELECT * FROM {} WHERE {} ORDER BY name""".format(cls._table, attribs)
+		return cls._sql(query, values)
 
 	def murders(self):
 		from .murder import Murder
