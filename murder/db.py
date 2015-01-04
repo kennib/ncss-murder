@@ -82,6 +82,12 @@ class Model(object):
 		self._sql(UPDATE, values + [self.id])
 		self.__dict__.update(kwargs)
 
+	def delete(self, **kwargs):
+		assert self.id is not None
+		attribs, values = self._attribs(', ', kwargs)
+		DELETE = """DELETE FROM {} WHERE ID = ?""".format(self._table, attribs)
+		self._sql(DELETE, values + [self.id])
+
 	@classmethod
 	def find(cls, **kwargs):
 		"""find(field, value) -> instance (or None)

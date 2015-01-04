@@ -65,7 +65,7 @@ def profiles_template(game_id, players) -> str:
 	return inside_page(profiles, game_id=game_id)
 
 def profile_template(game_id, player, death, murders, achievements) -> str:
-	profile = templater.load('profile.html').generate(game_id=game_id, player=player, death=death, murders=murders, achievements=achievements, profile=True)
+	profile = templater.load('profile.html').generate(game_id=game_id, player=player, death=death, murders=murders, achievements=achievements, profile=True, loggedin=False)
 	return inside_page(profile, game_id=game_id)
 
 
