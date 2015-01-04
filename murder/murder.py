@@ -65,14 +65,15 @@ def lodge(response, game_id=None):
 	locations = list(Location.iter())
 	response.write(lodge_template(game_id, players, locations))
 
-def murder_list_template(game_id, murders) -> str:
-	template = templater.load('murders.html').generate(game_id=game_id, murders=murders, profile=False)
+def murder_list_template(game_id, murders, loggedin) -> str:
+	template = templater.load('murders.html').generate(game_id=game_id, murders=murders, loggedin=loggedin, profile=False)
 	return inside_page(template, game_id=game_id)
 
 @disableable
 def murder_list(response, game_id=None):
 	murders = list(Murder.all_murders(game_id))
-	response.write(murder_list_template(game_id, murders))
+	loggedin = response.get_secure_cookie('loggedin')
+	response.write(murder_list_template(game_id, murders, loggedin))
 
 def murder_map_template(game_id, murders) -> str:
 	template = templater.load('murder_map.html').generate(game_id=game_id, murders=murders)
@@ -112,3 +113,13 @@ def murder_submit(response):
 	Achievement.total_progress(game_id)
 
 	response.redirect('/{}/murders'.format(game_id))
+
+def murder_delete(response):
+	game_id = response.get_field('game')
+	murder_id = response.get_field('murder')
+
+	murder = Murder.get(id=murder_id, game=game_id)
+	murder.delete()
+
+	from .achievement import Achievement
+	Achievement.total_progress(game_id)

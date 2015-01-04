@@ -2,6 +2,16 @@
 	<script src="/static/js/lib/jquery.min.js"></script>
 	<script src="/static/js/lib/jquery.dynatable.js"></script>
 	<link rel="stylesheet" href="/static/css/lib/jquery.dynatable.css" />
+
+	<script src="/static/js/deleteMurder.js"></script>
+	<script>
+		function deleteMurderOnSubmit(form) {
+			deleteMurder(form.game.value, form.murder.value);
+			var submit = form.querySelector('[type="submit"]');
+			window.s = submit;
+			submit.disabled = true;
+		}
+	</script>
 	
 	<h2>Murders</h2>
 
@@ -15,6 +25,9 @@
 				<th>Victim</th>
 				<th>Time of Death</th>
 				<th>Crime scene</th>
+				{% if loggedin %}
+				<th data-dynatable-ignore="true"></th>
+				{% end %}
 			</tr>
 		</thead>
 		<tbody>
@@ -26,6 +39,16 @@
 				<td>{% raw template('profile_link.html', game_id=game_id, player_name=murder.victim) %}</td>
 				<td>{{ " ".join(murder.datetime.replace("T","+").split("+")[:2]) }}</td>
 				<td>{{ murder.location }}</td>
+
+				{% if loggedin %}
+				<td>
+					<form onsubmit="deleteMurderOnSubmit(this); return false;">
+						<input type="hidden" name="game" value="{{ game_id }}"></input>
+						<input type="hidden" name="murder" value="{{ murder.id }}"></input>
+						<input type="submit" value="Delete">
+					</form>
+				</td>
+				{% end %}
 			</tr>
 			{% end %}
 		</tbody>

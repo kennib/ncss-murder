@@ -284,8 +284,15 @@ button {
 	font-family: 'Josefin Sans';
 }
 
-input[type=submit]:hover,
-button:hover {
+input[type=submit][disabled],
+button[disabled] {
+	cursor: default;
+
+	background-color: #ddd;
+}
+
+input[type=submit]:not([disabled]):hover,
+button:not([disabled]):hover {
 	background-color: #ba485c;
 }
 
