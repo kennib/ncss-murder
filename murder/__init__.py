@@ -6,7 +6,7 @@ from .home import home
 from .game import game, Game
 from .player import player, profiles, profile, Player
 from .location import Location
-from .murder import murder, murder_submit, lodge, murder_list, murder_map, Murder
+from .murder import murder, murder_submit, murder_delete, lodge, murder_list, murder_map, Murder
 from .stats import stats
 from .admin import admin, signup_page, signup, login_page, login, disable, Admin 
 from .achievement import achievements, achievements_stat, achievement_progress, Achievement, AchievementProgress
@@ -35,7 +35,7 @@ def init_server(**kwargs):
 	# API pages
 	server.register('/game', game)
 	server.register('/player', player, post=player)
-	server.register('/murder', murder, post=murder_submit)
+	server.register('/murder', murder, post=murder_submit, delete=murder_delete)
 	server.register('/achievement_progress', achievement_progress)
 	server.register('/signup', signup_page, post=signup)
 	server.register('/login', login_page, post=login)
