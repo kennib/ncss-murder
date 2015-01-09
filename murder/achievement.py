@@ -86,7 +86,7 @@ class MurderAchievement(Achievement):
 			progress_record = AchievementProgress.find(achievement=self.id,player=player.id)
 			if progress_record == None:
 				AchievementProgress.add(achievement=self.id, player=player.id, progress=progress, completed=int(progress >= self.goal))
-			elif progress_record.completed != 1:
+			else:
 				progress_record.update(progress=progress, completed=int(progress >= self.goal))
 		
 	def condition(self, murder):
@@ -133,7 +133,7 @@ class ConsecutiveMurderAchievement(Achievement):
 			progress_record = AchievementProgress.find(achievement=self.id,player=player.id)
 			if progress_record == None:
 				AchievementProgress.add(achievement=self.id, player=player.id, progress=progress, completed=int(progress >= self.goal))
-			elif progress_record.completed != 1:
+			else:
 				progress_record.update(progress=progress, completed=int(progress >= self.goal))
 
 class DeathAchievement(Achievement):
@@ -150,7 +150,7 @@ class DeathAchievement(Achievement):
 			progress_record = AchievementProgress.find(achievement=self.id,player=player.id)
 			if progress_record == None:
 				AchievementProgress.add(achievement=self.id, player=player.id, progress=1 if death else 0, completed=1 if death else 0)
-			elif progress_record.completed != 1:
+			else:
 				progress_record.update(progress=1 if death else 0, completed=1 if death else 0)
 		
 	def condition(self, death):
