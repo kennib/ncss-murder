@@ -76,7 +76,7 @@ from .admin import disableable
 def profiles(response, game_id=None):
 	players = list(Player.iter(game=game_id))
 	for player in players:
-                player.death = player.death() 
+		player.death = player.death() 
 	template = profiles_template(game_id, players)
 	response.write(template)
 
