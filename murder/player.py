@@ -9,22 +9,40 @@ class Player(Model):
 		self.id, self.game, self.name, self.type = id, game, name, type
 	
 	@classmethod
-	def select(cls, **kwargs):
+	def select(cls, order='name', **kwargs):
 		"""select(**kwargs) -> instance
 		   returns a cursor from the database with given attributes"""
 		if len(kwargs) == 0:
-			query = """SELECT * FROM {} ORDER BY name""".format(cls._table)
+			query = """SELECT * FROM {} ORDER BY {}""".format(cls._table, order)
 			values = []
 		else:
 			attribs, values = cls._attribs('AND', kwargs)
-			query = """SELECT * FROM {} WHERE {} ORDER BY name""".format(cls._table, attribs)
+			query = """SELECT * FROM {} WHERE {} ORDER BY {}""".format(cls._table, attribs, order)
 		return cls._sql(query, values)
+
+	@classmethod
+	def list(cls, game):
+		def convert(row):
+			id = row[0]
+			return {
+				'id': id,
+				'name': row[2],
+				'type': row[3],
+				'death': Player.is_dead(id),
+			}
+		player_query = Player.select(order='id', game=game)
+		return [convert(player) for player in player_query]
+
+	@classmethod
+	def is_dead(cls, id):
+		from .murder import Murder
+		return Murder.find(victim=id) is not None
 
 	def murders(self):
 		from .murder import Murder
 		murders = list(Murder.all_murders(murderer=self.id))
 		return murders
-		
+
 	def death(self):
 		from .murder import Murder
 		try:
@@ -75,7 +93,7 @@ from .admin import disableable
 def profiles(response, game_id=None):
 	players = list(Player.iter(game=game_id))
 	for player in players:
-                player.death = player.death() 
+		player.death = player.death() 
 	template = profiles_template(game_id, players)
 	response.write(template)
 
