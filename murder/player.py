@@ -18,8 +18,6 @@ class Player(Model):
 		else:
 			attribs, values = cls._attribs('AND', kwargs)
 			query = """SELECT * FROM {} WHERE {} ORDER BY {}""".format(cls._table, attribs, order)
-		#values.append(order)
-		print("running sql: {}, {}".format(query, values))
 		return cls._sql(query, values)
 
 	@classmethod
