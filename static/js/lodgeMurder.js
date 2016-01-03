@@ -38,15 +38,15 @@ window.addEventListener('load', function() {
   }
 
   sel_victim.addEventListener('change', function() {
-    if (sel_murderer.value) {
-      return;  // ignore, something already chosen
+    if (sel_murderer.value || !sel_victim.value) {
+      return;  // ignore, already chosen or no victim
     }
     selectNearest(sel_murderer, +sel_victim.value, -1)  // go back
   });
 
   sel_murderer.addEventListener('change', function() {
-    if (sel_victim.value) {
-      return;  // ignore, something already chosen
+    if (sel_victim.value || !sel_murderer.value) {
+      return;  // ignore, already chosen or no murderer
     }
     selectNearest(sel_victim, +sel_murderer.value, +1)  // go forward
   });
