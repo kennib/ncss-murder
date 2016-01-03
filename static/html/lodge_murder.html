@@ -11,7 +11,7 @@
 					<option></option>
 				{% for player in players %}
 					<option value="{{ player['id'] }}">
-						{% if player.death %}DEAD:{% end %}
+						{% if player['death'] %}DEAD:{% end %}
 						{{ escape(player['name']) }} - {{ escape(player['type']) }}
 					</option>
 				{% end %}
@@ -23,7 +23,7 @@
 					<option></option>
 				{% for player in players %}
 					<option value="{{ player['id'] }}">
-						{% if player.death %}DEAD:{% end %}
+						{% if player['death'] %}DEAD:{% end %}
 						{{ escape(player['name']) }} - {{ escape(player['type']) }}
 					</option>
 				{% end %}
