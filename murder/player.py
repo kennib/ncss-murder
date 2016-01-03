@@ -21,6 +21,25 @@ class Player(Model):
 		values.append(order)
 		return cls._sql(query, values)
 
+	@classmethod
+	def list(cls, game):
+		def convert(row):
+			return {
+				'id': row['id'],
+				'name': row['name'],
+				'type': row['type'],
+				'death': Player.is_dead(row['id']),
+			}
+		player_query = Player.select(game=game)
+		return [convert(player) for player in player_query]
+
+	@classmethod
+	def is_dead(self, id):
+		return Murder.find(victim=id) is not None
+
+	def is_dead(self, id):
+		return Murder.is_dead(self.id)
+
 	def murders(self):
 		from .murder import Murder
 		murders = list(Murder.all_murders(murderer=self.id))
@@ -49,14 +68,6 @@ class Player(Model):
 			if (achievement.goal and achievement.progress >= achievement.goal) or (not achievement.goal and achievement.progress):
 				score += achievement.points
 		return score
-
-	def helper_dict(self):
-		return {
-			'id': self.id,
-			'name': self.name,
-			'type': self.type,
-			'death': self.death(),
-		}
 
 	@classmethod
 	def init_db(cls):

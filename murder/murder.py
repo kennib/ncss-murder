@@ -60,8 +60,7 @@ def lodge_template(game_id, players, locations) -> str:
 	return inside_page(lodge, game_id=game_id)
 
 def lodge(response, game_id=None):
-	player_query = Player.select(game=game_id)
-	players = [player.helper_dict() for player in player_query]
+	players = Players.list(game_id)
 	locations = list(Location.iter())
 	response.write(lodge_template(game_id, players, locations))
 

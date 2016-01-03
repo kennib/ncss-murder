@@ -61,8 +61,7 @@ def admin(response, game_id=None):
 			game.disabled = is_disabled(game.disabled)
 		except DoesNotExistError:
 			game = None
-		player_query = Player.select(game=game_id)
-		players = [player.helper_dict() for player in player_query]
+		players = Players.list(game_id)
 		locations = list(Location.iter())
 		response.write(admin_template(game_id, game, players, locations))
 	else:
