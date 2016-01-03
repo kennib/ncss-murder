@@ -6,20 +6,24 @@
 
 		<fieldset>
 			<p>
-				<label for="victim">Victim</label>
-				<select name="victim" required>
+				<label for="sel_victim">Victim</label>
+				<select id="sel_victim" name="victim" required>
+					<option></option>
 				{% for player in players %}
 					<option value="{{ player['id'] }}">
+						{% if player.death %}DEAD:{% end %}
 						{{ escape(player['name']) }} - {{ escape(player['type']) }}
 					</option>
 				{% end %}
 				</select>
 			</p>
 			<p>
-				<label for="murderer">Murderer</label>
-				<select name="murderer" required>
+				<label for="sel_murderer">Murderer</label>
+				<select id="sel_murderer" name="murderer" required>
+					<option></option>
 				{% for player in players %}
 					<option value="{{ player['id'] }}">
+						{% if player.death %}DEAD:{% end %}
 						{{ escape(player['name']) }} - {{ escape(player['type']) }}
 					</option>
 				{% end %}
@@ -60,7 +64,8 @@
 			<input type="submit" value="Lodge Murder"></input>
 		</fieldset>
 	</form>
-	
+
+  <script src="/static/lodgeMurder.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.js"></script>
 	<script>
 		var datetime = document.querySelector('input[type=datetime-local]');

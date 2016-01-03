@@ -9,22 +9,23 @@ class Player(Model):
 		self.id, self.game, self.name, self.type = id, game, name, type
 	
 	@classmethod
-	def select(cls, **kwargs):
+	def select(cls, order='name', **kwargs):
 		"""select(**kwargs) -> instance
 		   returns a cursor from the database with given attributes"""
 		if len(kwargs) == 0:
-			query = """SELECT * FROM {} ORDER BY name""".format(cls._table)
+			query = """SELECT * FROM {} ORDER BY ?""".format(cls._table)
 			values = []
 		else:
 			attribs, values = cls._attribs('AND', kwargs)
-			query = """SELECT * FROM {} WHERE {} ORDER BY name""".format(cls._table, attribs)
+			query = """SELECT * FROM {} WHERE {} ORDER BY ?""".format(cls._table, attribs)
+		values.append(order)
 		return cls._sql(query, values)
 
 	def murders(self):
 		from .murder import Murder
 		murders = list(Murder.all_murders(murderer=self.id))
 		return murders
-		
+
 	def death(self):
 		from .murder import Murder
 		try:
