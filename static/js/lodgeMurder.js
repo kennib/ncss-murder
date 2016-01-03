@@ -15,8 +15,10 @@ window.addEventListener('load', function() {
     direction = direction > 0 ? 1 : -1;
 
     var all = {};
+    var max = 0;
     for (var i = 0, opt; opt = select.options[i]; ++i) {
       all[+opt.value] = true;
+      max = Math.max(max, +opt.value);
     }
 
     var target = self;
@@ -25,6 +27,10 @@ window.addEventListener('load', function() {
       if (all[target]) {
         select.value = target;
         return true;
+      }
+
+      if (target <= 0 || target > max) {
+        break;
       }
     }
 
@@ -42,7 +48,7 @@ window.addEventListener('load', function() {
     if (sel_victim.value) {
       return;  // ignore, something already chosen
     }
-    selectNearest(sel_murderer, +sel_murderer.value, -1)  // go forward
+    selectNearest(sel_victim, +sel_murderer.value, +1)  // go forward
   });
 
 });

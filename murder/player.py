@@ -13,32 +13,32 @@ class Player(Model):
 		"""select(**kwargs) -> instance
 		   returns a cursor from the database with given attributes"""
 		if len(kwargs) == 0:
-			query = """SELECT * FROM {} ORDER BY ?""".format(cls._table)
+			query = """SELECT * FROM {} ORDER BY {}""".format(cls._table, order)
 			values = []
 		else:
 			attribs, values = cls._attribs('AND', kwargs)
-			query = """SELECT * FROM {} WHERE {} ORDER BY ?""".format(cls._table, attribs)
-		values.append(order)
+			query = """SELECT * FROM {} WHERE {} ORDER BY {}""".format(cls._table, attribs, order)
+		#values.append(order)
+		print("running sql: {}, {}".format(query, values))
 		return cls._sql(query, values)
 
 	@classmethod
 	def list(cls, game):
 		def convert(row):
+			id = row[0]
 			return {
-				'id': row['id'],
-				'name': row['name'],
-				'type': row['type'],
-				'death': Player.is_dead(row['id']),
+				'id': id,
+				'name': row[2],
+				'type': row[3],
+				'death': Player.is_dead(id),
 			}
-		player_query = Player.select(game=game)
+		player_query = Player.select(order='id', game=game)
 		return [convert(player) for player in player_query]
 
 	@classmethod
-	def is_dead(self, id):
+	def is_dead(cls, id):
+		from .murder import Murder
 		return Murder.find(victim=id) is not None
-
-	def is_dead(self, id):
-		return Murder.is_dead(self.id)
 
 	def murders(self):
 		from .murder import Murder

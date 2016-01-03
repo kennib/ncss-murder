@@ -60,7 +60,7 @@ def lodge_template(game_id, players, locations) -> str:
 	return inside_page(lodge, game_id=game_id)
 
 def lodge(response, game_id=None):
-	players = Players.list(game_id)
+	players = Player.list(game_id)
 	locations = list(Location.iter())
 	response.write(lodge_template(game_id, players, locations))
 
