@@ -62,7 +62,7 @@ def admin(response, game_id=None):
 		except DoesNotExistError:
 			game = None
 		player_query = Player.select(game=game_id)
-		players = [{'id': id, 'name': name, 'type': type} for id, game, name, type in player_query]
+		players = [player.helper_dict() for player in player_query]
 		locations = list(Location.iter())
 		response.write(admin_template(game_id, game, players, locations))
 	else:

@@ -50,6 +50,14 @@ class Player(Model):
 				score += achievement.points
 		return score
 
+	def helper_dict(self):
+		return {
+			'id': self.id,
+			'name': self.name,
+			'type': self.type,
+			'death': self.death(),
+		}
+
 	@classmethod
 	def init_db(cls):
 		CREATE = """CREATE TABLE player (
