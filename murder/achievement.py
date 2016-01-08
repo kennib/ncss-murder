@@ -12,6 +12,16 @@ def strptime(date):
 	else:
 		return None
 
+def time_unit(amount, unit):
+	if unit == 'hours' or unit == 'hour':
+		return ('seconds', amount*60*60)
+	elif unit == 'minutes' or unit == 'minute':
+		return ('seconds', amount*60)
+	elif unit == 'days' or unit == 'day':
+		return ('days', amount)
+	else:
+		raise InputError('{!r} is not a valid unit'.format(unit))
+
 from itertools import takewhile
 
 
@@ -174,6 +184,41 @@ class InnocentDeathAchievement(DeathAchievement):
 		innocent = murders.fetchone() == None
 		return innocent
 
+class TimeLastedAchievement(Achievement):
+	def __init__(self, id, name, description, points, goal=None, unit='days'):
+		super(TimeLastedAchievement, self).__init__(id, name, description, points, goal, unit)
+
+	def calculate_progress(self, game):
+		unit, goal = time_unit(self.goal, self.unit)
+
+		players = list(Player.iter(game=game))
+		murders = list(Murder.iter(game=game))
+
+		start_time = strptime(murders[0].datetime) if murders else now
+		goal_time = start_time + timedelta(**{unit: goal})
+		now = dt.now(start_time.tzinfo)
+
+		for player in players:
+			death = [murder for murder in murders if murder.victim == player.id]
+			if death:
+				death_time = strptime(death[0].datetime)
+				dead_before_goal = death_time < goal_time
+			else:
+				dead_before_goal = False
+
+			completed = 1 if (not dead_before_goal) and now > goal_time else 0
+			if death:
+				time_progress = getattr(death_time - start_time, unit) * (goal/self.goal)
+			else:
+				time_progress = getattr(now - start_time, unit) * (goal/self.goal)
+			progress = max(0, min(self.goal, time_progress))
+
+			progress_record = AchievementProgress.find(achievement=self.id, player=player.id)
+			if progress_record == None:
+				AchievementProgress.add(achievement=self.id, player=player.id, progress=progress, completed=completed)
+			else:
+				progress_record.update(progress=progress, completed=completed)
+
 Achievement.achievements = [
 	MurderAchievement(None, '1 kill', 'Get your first kill', 5, 1),
 	MurderAchievement(None, '10 kills', 'Murder two people', 5, 2),
@@ -189,6 +234,10 @@ Achievement.achievements = [
 	PlaceMurderAchievement(None, 'Home Kill', 'Kill at Women\'s College', 5, 1, 'killed at Women\'s', ['Front Lawns', 'Library', 'Menzies', 'Women\'s Dining Hall', 'Women\'s Other']),
 	PlaceMurderAchievement(None, 'Working Kill', 'Kill at the School of IT', 5, 1, 'killed at SIT', ['SIT Winter Garden', 'Lecture Hall']),
 	PlaceMurderAchievement(None, 'Away Kill', 'Kill outside of Women\'s and SIT', 10, 1, 'killed away', ['Front Lawns', 'Library', 'Menzies', 'Women\'s Dining Hall', 'Women\'s Other', 'SIT Winter Garden', 'Lecture Hall'], inverse=True),
+	TimeLastedAchievement(None, 'Still Alive', 'Stay alive for at least an hour', 5, 1, 'hour'),
+	TimeLastedAchievement(None, 'Lasted a day', 'Stay alive for at least a day', 5, 1, 'day'),
+	TimeLastedAchievement(None, 'Lasted two days', 'Stay alive for at least two days', 5, 2, 'days'),
+	TimeLastedAchievement(None, 'Lasted three days', 'Stay alive for at least three days', 5, 3, 'days'),
 ]
 
 class AchievementProgress(Model):
