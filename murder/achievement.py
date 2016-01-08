@@ -77,10 +77,10 @@ class MurderAchievement(Achievement):
 
 	def calculate_progress(self, game):
 		players = Player.iter(game=game)
-		murders = list(Murder.iter(game=game))
+		murders = list(Murder.all_murders(game=game))
 		for player in players:
 			player_murders = [murder for murder in murders
-			                  if murder.murderer == player.id and self.condition(murder)]
+			                  if murder.murderer == player.name and self.condition(murder)]
 			progress = min(len(player_murders), self.goal)
 
 			progress_record = AchievementProgress.find(achievement=self.id,player=player.id)
@@ -105,6 +105,18 @@ class TimeMurderAchievement(MurderAchievement):
 			return self.start_time <= time <= self.end_time
 		else:
 			return not self.end_time <= time <= self.start_time
+
+class PlaceMurderAchievement(MurderAchievement):
+	def __init__(self, id, name, description, points, goal, unit='murders', places=None, inverse=False):
+		super(PlaceMurderAchievement, self).__init__(id, name, description, points, goal, unit)
+		self.places = places if places else []
+		self.inverse = inverse
+
+	def condition(self, murder):
+		if not self.inverse:
+			return murder.location in self.places
+		else:
+			return murder.location not in self.places
 
 class ConsecutiveMurderAchievement(Achievement):
 	def __init__(self, id, name, description, points, goal, unit='murders', within=timedelta(minutes=10)):
@@ -174,6 +186,9 @@ Achievement.achievements = [
 	InnocentDeathAchievement(None, 'Innocent victim', 'Die without killing', 5),
 	TimeMurderAchievement(None, 'Early bird', 'Kill during the morning (before 9am)', 5, 1, 'worm gotten', time(hour=4), time(hour=9)),
 	TimeMurderAchievement(None, 'Mafia talk', 'Kill during the night (after 8pm)', 5, 1, 'nighttime hit', time(hour=20), time(hour=4)),
+	PlaceMurderAchievement(None, 'Home Kill', 'Kill at Women\'s College', 5, 1, 'killed at Women\'s', ['Front Lawns', 'Library', 'Menzies', 'Women\'s Dining Hall', 'Women\'s Other']),
+	PlaceMurderAchievement(None, 'Working Kill', 'Kill at the School of IT', 5, 1, 'killed at SIT', ['SIT Winter Garden', 'Lecture Hall']),
+	PlaceMurderAchievement(None, 'Away Kill', 'Kill outside of Women\'s and SIT', 10, 1, 'killed away', ['Front Lawns', 'Library', 'Menzies', 'Women\'s Dining Hall', 'Women\'s Other', 'SIT Winter Garden', 'Lecture Hall'], inverse=True),
 ]
 
 class AchievementProgress(Model):
