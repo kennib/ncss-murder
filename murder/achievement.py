@@ -194,6 +194,7 @@ class TimeLastedAchievement(Achievement):
 		players = list(Player.iter(game=game))
 		murders = list(Murder.iter(game=game))
 
+		now = dt.now()
 		start_time = strptime(murders[0].datetime) if murders else now
 		goal_time = start_time + timedelta(**{unit: goal})
 		now = dt.now(start_time.tzinfo)
