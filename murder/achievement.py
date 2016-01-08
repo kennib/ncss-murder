@@ -209,9 +209,9 @@ class TimeLastedAchievement(Achievement):
 
 			completed = 1 if (not dead_before_goal) and now > goal_time else 0
 			if death:
-				time_progress = getattr(death_time - start_time, unit) * (goal/self.goal)
+				time_progress = getattr(death_time - start_time, unit) * (self.goal/goal)
 			else:
-				time_progress = getattr(now - start_time, unit) * (goal/self.goal)
+				time_progress = getattr(now - start_time, unit) * (self.goal/goal)
 			progress = max(0, min(self.goal, time_progress))
 
 			progress_record = AchievementProgress.find(achievement=self.id, player=player.id)
