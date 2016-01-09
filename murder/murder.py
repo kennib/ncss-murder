@@ -1,7 +1,7 @@
 import json
 
 from .db import Model
-from .admin import disableable
+from .admin import disableable, admin_only
 from .player import Player
 from .location import Location
 from .template import templater, inside_page
@@ -83,6 +83,7 @@ def murder_map(response, game_id=None):
 	murders = list(Murder.all_murders(game_id))
 	response.write(murder_map_template(game_id, murders))
 
+@admin_only
 def murder(response):
 	game_id = response.get_field('game')
 	types = response.request.headers['Accept'].split(';')
@@ -91,6 +92,7 @@ def murder(response):
 	murder_json = json.dumps([murder.__dict__ for murder in murders])
 	response.write(murder_json)
 
+@admin_only
 def murder_submit(response):
 	game_id = response.get_field('game')
 
@@ -113,6 +115,7 @@ def murder_submit(response):
 
 	response.redirect('/{}/murders'.format(game_id))
 
+@admin_only
 def murder_delete(response):
 	game_id = response.get_field('game')
 	murder_id = response.get_field('murder')

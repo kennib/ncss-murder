@@ -1,4 +1,5 @@
 from hashlib import sha256
+from tornado.web import HTTPError
 
 from .db import Model, DoesNotExistError
 from .game import Game
@@ -116,6 +117,17 @@ def login(response):
 	else:
 		response.redirect('/login?game={}&failed=true'.format(game_id) if game_id != None else '/login')
 
+def admin_only(handler):
+	def admin_handler(response, *args):
+		loggedin = response.get_secure_cookie('loggedin')
+
+		if loggedin:
+			handler(response, *args)
+		else:
+			raise HTTPError(403, "You do not have permission to perform this action")
+
+	return admin_handler
+
 def is_disabled(disable):
 	if str(disable).lower() in ['true', '1']:
 		disabled = True
@@ -126,6 +138,7 @@ def is_disabled(disable):
 
 	return disabled
 	
+@admin_only
 def disable(response):
 	game_id = response.get_field('game')
 	disable = response.get_field('disable')

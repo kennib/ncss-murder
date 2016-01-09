@@ -106,6 +106,8 @@ def profile(response, game_id=None, player_id=None):
 	template = profile_template(game_id, player, death, murders, achievements)
 	response.write(template)
 
+from .admin import admin_only
+@admin_only
 def player(response):
 	game_id = response.get_field('game')
 	name, type, contents = response.get_file('players')

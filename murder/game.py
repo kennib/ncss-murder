@@ -35,7 +35,6 @@ class Game(Model):
 		)"""
 		cls._sql(CREATE)
 
-
 def game(response):
 	latest = Game.latest() 
 	if latest != None:
