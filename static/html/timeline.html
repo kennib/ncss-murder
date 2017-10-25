@@ -1,30 +1,30 @@
 <article>
 	<h2>Timeline</h2>
 
-	<div id="timeline"></div>
-	<script type="text/javascript" src="http://cdn.knightlab.com/libs/timeline/latest/js/storyjs-embed.js"></script>
+	<div id="timeline" style="width: 100%; height: 600px;"></div>
+	<link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+	<script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
 	<style>
-		.vco-storyjs .timenav h3,
-		.vco-storyjs * {
+		.tl-text,
+		.tl-timemarker-content,
+		.tl-slidenav-title,
+		.tl-slidenav-description {
 			font-family: 'Josefin Sans' !important;
 		}
 
-		.vco-storyjs a {
+		.tl-headline a {
 			color: #ad213a !important;
 		}
 
-		.vco-timeline .vco-navigation .timenav .content .marker.active .flag .flag-content h3, .vco-timeline .vco-navigation .timenav .content .marker.active .flag-small .flag-content h3,
-		.vco-notouch .vco-navigation .timenav .content .marker.active:hover .flag .flag-content h3, .vco-notouch .vco-navigation .timenav .content .marker.active:hover .flag-small .flag-content h3 {
-			color: #ad213a !important;
-		}
-
-		.vco-timeline .vco-navigation .timenav-background .timenav-line,
-		.vco-timeline .vco-navigation .timenav .content .marker.active .line,
-		.vco-timeline .vco-navigation .timenav .content .marker.active .dot {
-			background-color: #ad213a !important;
-		}
+		.tl-timeera.tl-timeera-color0 .tl-timeera-background { background-color: rgba(173,33,58, 1) !important; }
+		.tl-timeera.tl-timeera-color1 .tl-timeera-background { background-color: rgba(173,33,58, 0.4) !important; }
+		.tl-timeera.tl-timeera-color2 .tl-timeera-background { background-color: rgba(173,33,58, 0.8) !important; }
+		.tl-timeera.tl-timeera-color3 .tl-timeera-background { background-color: rgba(173,33,58, 0.6) !important; }
+		.tl-timeera.tl-timeera-color4 .tl-timeera-background { background-color: rgba(173,33,58, 0.9) !important; }
+		.tl-timeera.tl-timeera-color5 .tl-timeera-background { background-color: rgba(173,33,58, 0.7) !important; }
 	</style>
 
+	<script src="/static/js/lib/moment.min.js"></script>
 	<script src="/static/js/loadMurders.js"></script>
 	<script src="/static/js/loadSchedule.js"></script>
 	<script>
@@ -32,36 +32,54 @@
 			return '<a href="/{{ game_id }}/profiles/'+player.replace(' ', '+')+'">'+player+'</a>'
 		};
 
+		function timelineDate(dateString) {
+			var date = moment(dateString);
+			return {
+				year: date.year(),
+				month: date.month(),
+				day: date.date(),
+				hour: date.hours(),
+				minute: date.minutes(),
+			};
+		}
+
 		function createTimeline(murders, schedule) {
 			var timeline = {
-				timeline: {
-					type: "default",
-					era: schedule,
-				},
+				eras: schedule.map(function(event) {
+					return {
+						start_date: timelineDate(event.startDate),
+						end_date: timelineDate(event.endDate),
+						text: {
+							headline: event.headline,
+						},
+					};
+				}),
 			};
-
 			var murderDates = murders.map(function(murder) {
 				return {
-					startDate: murder.datetime,
-					headline: profile_link(murder.victim) + ' killed by ' + profile_link(murder.murderer),
+					start_date: timelineDate(murder.datetime),
+					text: {
+						headline: murder.victim + ' murdered',
+						text: profile_link(murder.victim) + 'was killed by ' + profile_link(murder.murderer),
+					},
 				};
 			});
 
 			if (murderDates && murderDates.length > 0)
-				timeline.timeline.date = (murderDates);
+				timeline.events = murderDates;
 			else
-				timeline.timeline.date = [{
-					startDate: new Date(),
-					headline: 'No Murders yet',
+				timeline.events = [{
+					start_date: timelineDate(),
+					text: {
+						headline: 'No murders yet',
+					},
 				}];
 
-			createStoryJS({
-				type: 'timeline',
-				width: '100%',
-				height: '400',
-				source: timeline,
-				embed_id: 'timeline'
+			new TL.Timeline('timeline', timeline, {
+				initial_zoom: 6,
+				start_at_end: true,
 			});
+
 		};
 
 		loadSchedule({{ game_id }}, function(schedule) {
