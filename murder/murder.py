@@ -83,7 +83,6 @@ def murder_map(response, game_id=None):
 	murders = list(Murder.all_murders(game_id))
 	response.write(murder_map_template(game_id, murders))
 
-@admin_only
 def murder(response):
 	game_id = response.get_field('game')
 	types = response.request.headers['Accept'].split(';')
